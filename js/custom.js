@@ -6,7 +6,7 @@ function getYear() {
 }
 
 getYear();
-
+// This function is used to display more or less text on a click in About Us page
 function readMore(){
     let lesstxt =document.getElementById("less-txt");
     let moretxt = document.getElementById("more-txt");
