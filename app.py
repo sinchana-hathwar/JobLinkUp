@@ -66,9 +66,9 @@ def loginuser():
         try:
             print("entered try")
             login_email = request.form["login_email"]
-            print("login_email", login_email)
+            # print("login_email", login_email)
             login_password = request.form["login_password"]
-            print("login_password", login_password)
+            # print("login_password", login_password)
             with sqlite3.connect("database.db") as con:
                 cur = con.cursor()
                 user = cur.execute(
