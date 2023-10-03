@@ -9,7 +9,7 @@ conn = sqlite3.connect("database.db")
 print("Opened database successfully")
 
 conn.execute(
-    "CREATE TABLE if not exists User (name TEXT,email TEXT, password TEXT, phone_no INT, DoB date, addr TEXT, city TEXT, pin TEXT, Qualification TEXT, About TEXT)"
+    "CREATE TABLE if not exists User (name TEXT,email TEXT, password TEXT, phone_no INT, DoB date, addr TEXT, city TEXT, pin TEXT, Qualification TEXT, About TEXT, IsSubscribed BOOLEAN DEFAULT 0)"
 )
 conn.execute(
     "CREATE TABLE if not exists Jobs (Company_name TEXT,Title TEXT, JD TEXT, Salary INT, Location TEXT, Duration TEXT)"
@@ -54,6 +54,13 @@ def premium():
     print("email not in session")
     return redirect(url_for("login"))
 
+@app.route("/profile")
+def profile():
+    if "email" in session:
+        return render_template("profile.html")
+    print("email not in session")
+    return redirect(url_for("login"))
+
 
 @app.route("/login")
 def login():
@@ -66,14 +73,14 @@ def loginuser():
         try:
             print("entered try")
             login_email = request.form["login_email"]
-            # print("login_email", login_email)
+            print("login_email", login_email)
             login_password = request.form["login_password"]
-            # print("login_password", login_password)
+            print("login_password", login_password)
             with sqlite3.connect("database.db") as con:
                 cur = con.cursor()
                 user = cur.execute(
                     "SELECT * FROM User WHERE email = ?", (login_email,)
-                ).fetchall()
+                ).fetchall() 
                 print("Users are", user)
                 if len(user) == 0:
                     flash("Invalid Email")

@@ -44,6 +44,11 @@
   <link href="{{url_for('static',filename = 'css/style.css')}}" rel="stylesheet" />
   <!-- responsive style -->
   <link href="{{url_for('static',filename = 'css/responsive.css')}}" rel="stylesheet" />
+
+  <!--Profile page css-->
+  <link href="{{url_for('static',filename= 'css/profilestyle.css')}}" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
 </head>
 
 <body class="sub_page">
@@ -82,7 +87,7 @@
                 <div class="dropdown">
                   <button class="dropbtn"><i class="fa fa-user-circle" ></i></button>
                   <div class="dropdown-content">
-                    <a href="#">Your Profile</a>
+                    <a href="{{url_for('profile')}}">Your Profile</a>
                     
                     <a href="{{url_for('logout')}}">Log out</a>
                   </div>
@@ -175,5 +180,10 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js" integrity="sha256-Zr3vByTlMGQhvMfgkQ5BtWRSKBGa2QlspKYJnkjZTmo=" crossorigin="anonymous"></script>
       <!-- custom js -->
       <script src="{{url_for('static',filename = 'js/custom.js')}}"></script>
+
+      <!-- Profile page scripts -->
+      <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+      <script type="text/javascript"></script>
 </body>
 </html>
