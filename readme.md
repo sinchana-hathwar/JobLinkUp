@@ -8,8 +8,9 @@
    `source .venv/bin/activate` (linux)\
    `.venv\Scripts\activate`(windows)
 
-3. Install dependencies from `requirements.txt`\
-   `pip install -r requirements.txt`
+3. Install dependencies from\
+   `requirements.txt`\
+    `pip install -r requirements.txt`
 
 4. Run app.py
 

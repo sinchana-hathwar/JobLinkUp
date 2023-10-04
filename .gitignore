@@ -1,1 +1,61 @@
+# Virtual environment
 venv/
+
+# Compiled Python files
+*.pyc
+__pycache__/
+
+# Local development configuration
+instance/
+
+# Environment variables (if using dotenv or similar)
+.env
+
+# IDE or editor specific files
+.idea/
+.vscode/
+
+# Log files
+*.log
+
+# Cache and compiled files
+*.pyc
+*.pyo
+__pycache__/
+*.db
+
+# Dependency directories
+lib/
+bin/
+build/
+include/
+lib64/
+libs/
+*.egg
+*.egg-info/
+dist/
+node_modules/
+
+# Compiled source
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Package files
+*.log
+*.tar.gz
+*.zip
+
+# Database
+*.sqlite3
+
+# Flask configuration
+instance/
+*.cfg
+
+# System files
+.DS_Store
+Thumbs.db

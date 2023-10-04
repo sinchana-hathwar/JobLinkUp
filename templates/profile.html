@@ -1,84 +1,278 @@
 {% extends "base.html" %} {% block content %}
 <div class="container-xl px-4 mt-4">
+  <hr class="mt-0 mb-4" />
+  <div class="row">
+    <div class="col-xl-4">
+      <div class="card mb-4 mb-xl-0">
+        <div class="card-header">Profile Picture</div>
+        <div class="card-body text-center">
+          <img
+            class="img-account-profile rounded-circle mb-2"
+            src="http://bootdey.com/img/Content/avatar/avatar1.png"
+            alt
+          />
 
+          <div class="small font-italic text-muted mb-4">
+            JPG or PNG no larger than 5 MB
+          </div>
 
-<hr class="mt-0 mb-4">
-<div class="row">
-<div class="col-xl-4">
+          <button class="btn btn-primary" type="button">
+            Upload new image
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-8">
+      <div class="card mb-4">
+        <div class="card-header">Account Details</div>
+        <div class="card-body">
+          <form>
+            <div class="mb-3">
+              <label class="small mb-1" for="inputUsername"
+                >Username (how your name will appear to other users on the
+                site)</label
+              >
+              <input
+                class="form-control"
+                id="inputUsername"
+                type="text"
+                name="user_name"
+                placeholder="Enter your username"
+              />
+            </div>
 
-<div class="card mb-4 mb-xl-0">
-<div class="card-header">Profile Picture</div>
-<div class="card-body text-center">
+            <div class="row gx-3 mb-3">
+              <div class="col-md-6">
+                <label class="small mb-1" for="Phone">Phone number</label>
+                <input
+                  class="form-control"
+                  id="phone"
+                  name="phone"
+                  type="text"
+                  placeholder="Enter your phone number"
+                />
+              </div>
 
-<img class="img-account-profile rounded-circle mb-2" src="http://bootdey.com/img/Content/avatar/avatar1.png" alt>
+              <div class="col-md-6">
+                <label for="joblinkup-usage" class="small mb-1"
+                  >How do you want to use JobLinkup?</label
+                >
+                <select id="joblinkup-usage" name="joblinkup-usage">
+                  <option value="seek-opportunities">Seek opportunities</option>
+                  <option value="hire-talent">Hire talent</option>
+                </select>
+              </div>
+            </div>
 
-<div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
+            <div class="row gx-3 mb-3">
+              <div class="col-md-6">
+                <label class="small mb-1" for="pincode" name="pincode"
+                  >Pincode</label
+                >
+                <input
+                  class="form-control"
+                  id="pinCode"
+                  type="text"
+                  placeholder="Enter your Pincode"
+                />
+              </div>
 
-<button class="btn btn-primary" type="button">Upload new image</button>
-</div>
-</div>
-</div>
-<div class="col-xl-8">
+              <div class="col-md-6">
+                <label class="small mb-1" for="inputLocation" name="location"
+                  >Location</label
+                >
+                <input
+                  class="form-control"
+                  id="inputLocation"
+                  type="text"
+                  placeholder="Enter your City and Country"
+                />
+              </div>
+            </div>
 
-<div class="card mb-4">
-<div class="card-header">Account Details</div>
-<div class="card-body">
-<form>
+            <div class="row gx-3 mb-3" style="display: flex; width: 100%">
+              <div class="col-md-6">
+                <label class="small mb-1" for="degree"
+                  >What is your highest qualification?</label
+                >
+                <select name="degree">
+                  <option value="High School">High School</option>
+                  <option value="Diploma Degree">Diploma Degree</option>
+                  <option value="Bachelor's Degree">Bachelor's Degree</option>
+                  <option value="Master's Degree">Master's Degree</option>
+                  <option value="Doctoral Degree">Doctoral Degree</option>
+                  <option value="Professional Degree">
+                    Professional Degree
+                  </option>
+                </select>
+              </div>
 
-<div class="mb-3">
-<label class="small mb-1" for="inputUsername">Username (how your name will appear to other users on the site)</label>
-<input class="form-control" id="inputUsername" type="text" placeholder="Enter your username" value="username">
-</div>
+              <div class="col-md-6">
+                <label class="small mb-1" for="subject">Subject of study</label>
+                <select name="subject">
+                  <option value="Accounting and Finance">
+                    Accounting and Finance
+                  </option>
+                  <option value="Aerospace Engineering">
+                    Aerospace Engineering
+                  </option>
+                  <option value="Agriculture">Agriculture</option>
+                  <option value="American Studies">American Studies</option>
+                  <option value="Animal Science and Management">
+                    Animal Science and Management
+                  </option>
+                  <option value="Animation">Animation</option>
+                  <option value="Anthropology">Anthropology</option>
+                  <option value="Archaeology">Archaeology</option>
+                  <option value="Architecture">Architecture</option>
+                  <option value="Biochemistry">Biochemistry</option>
+                  <option value="Biology">Biology</option>
+                  <option value="Biomedical Sciences">
+                    Biomedical Sciences
+                  </option>
+                  <option value="Business Management">
+                    Business Management
+                  </option>
+                  <option value="Chemical Engineering">
+                    Chemical Engineering
+                  </option>
+                  <option value="Chemistry">Chemistry</option>
+                  <option value="Civil Engineering">Civil Engineering</option>
+                  <option value="Classics">Classics</option>
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="Creative Writing">Creative Writing</option>
+                  <option value="Criminology">Criminology</option>
+                  <option value="Dance">Dance</option>
+                  <option value="Data science">Dentistry</option>
+                  <option value="Drama">Drama</option>
+                  <option value="Early Childhood Studies">
+                    Early Childhood Studies
+                  </option>
+                  <option value="Economics">Economics</option>
+                  <option value="Education">Education</option>
+                  <option value="Electrical and Electronic Engineering">
+                    Electrical and Electronic Engineering
+                  </option>
+                  <option value="English">English</option>
+                  <option value="Environmental Science">
+                    Environmental Science
+                  </option>
+                  <option value="Events Management">Events Management</option>
+                  <option value="Fashion">Fashion</option>
+                  <option value="Film Production">Film Production</option>
+                  <option value="Film Studies">Film Studies</option>
+                  <option value="Fine Art">Fine Art</option>
+                  <option value="Food Science">Food Science</option>
+                  <option value="Forensic Science">Forensic Science</option>
+                  <option value="Games Design">Games Design</option>
+                  <option value="Genetics">Genetics</option>
+                  <option value="Geography">Geography</option>
+                  <option value="Geology">Geology</option>
+                  <option value="Graphic Design">Graphic Design</option>
+                  <option value="Health and Social Care">
+                    Health and Social Care
+                  </option>
+                  <option value="Health Studies">Health Studies</option>
+                  <option value="History">History</option>
+                  <option value="History of Art">History of Art</option>
+                  <option value="Hospitality Management">
+                    Hospitality Management
+                  </option>
+                  <option value="Human Resource Management">
+                    Human Resource Management
+                  </option>
+                  <option value="Illustration">Illustration</option>
+                  <option value="Information Systems">
+                    Information Systems
+                  </option>
+                  <option value="Interior Design">Interior Design</option>
+                  <option value="International Business">
+                    International Business
+                  </option>
+                  <option value="International Relations">
+                    International Relations
+                  </option>
+                  <option value="Journalism">Journalism</option>
+                  <option value="Law">Law</option>
+                  <option value="Linguistics">Linguistics</option>
+                  <option value="Management">Management</option>
+                  <option value="Marketing">Marketing</option>
+                  <option value="Mathematics">Mathematics</option>
+                  <option value="Mechanical Engineering">
+                    Mechanical Engineering
+                  </option>
+                  <option value="Media Studies">Media Studies</option>
+                  <option value="Medical Science">Medical Science</option>
+                  <option value="Music">Music</option>
+                  <option value="Nursing">Nursing</option>
+                  <option value="Nutrition">Nutrition</option>
+                  <option value="Occupational Therapy">
+                    Occupational Therapy
+                  </option>
+                  <option value="Optometry">Optometry</option>
+                  <option value="Pharmacy">Pharmacy</option>
+                  <option value="Philosophy">Philosophy</option>
+                  <option value="Photography">Photography</option>
+                  <option value="Physical Therapy">Physical Therapy</option>
+                  <option value="Physics">Physics</option>
+                  <option value="Political Science">Political Science</option>
+                  <option value="Psychology">Psychology</option>
+                </select>
+              </div>
+            </div>
 
-<div class="row gx-3 mb-3">
+            <div class="mb-3">
+              <label class="small mb-1" for="inputEmailAddress" name="email"
+                >Email address</label
+              >
+              <input
+                class="form-control"
+                id="inputEmailAddress"
+                type="email"
+                placeholder="Enter your email address"
+                value="name@example.com"
+              />
+            </div>
 
-<div class="col-md-6">
-<label class="small mb-1" for="inputFirstName">First name</label>
-<input class="form-control" id="inputFirstName" type="text" placeholder="Enter your first name" value="Valerie">
-</div>
+            <div class="row gx-3 mb-3">
+              <div class="col-md-6">
+                <div style="padding: 30px 4px">
+                  <label
+                    for="resume-upload"
+                    style="
+                      background-color: #3498db;
+                      color: #fff;
+                      padding: 8px 40px;
+                      border-radius: 5px;
+                      cursor: pointer;
+                      transition: background-color 0.3s ease;
+                    "
+                    onmouseover="this.style.backgroundColor='#2980b9'"
+                    onmouseout="this.style.backgroundColor='#0d6efd'"
+                    >Upload your resume</label
+                  >
+                  <input type="file" id="resume-upload" style="display: none" />
+                  <p id="file-name"></p>
+                </div>
+              </div>
 
-<div class="col-md-6">
-<label class="small mb-1" for="inputLastName">Last name</label>
-<input class="form-control" id="inputLastName" type="text" placeholder="Enter your last name" value="Luna">
-</div>
-</div>
+              <div class="col-md-6">
+                <label class="small mb-1" for="inputBirthday">Birthday</label>
+                <input
+                  class="form-control"
+                  id="inputBirthday"
+                  type="date"
+                  name="birthday"
+                  placeholder="Enter your birthday"
+                />
+              </div>
+            </div>
 
-<div class="row gx-3 mb-3">
-
-<div class="col-md-6">
-<label class="small mb-1" for="inputOrgName">Organization name</label>
-<input class="form-control" id="inputOrgName" type="text" placeholder="Enter your organization name" value="Start Bootstrap">
-</div>
-
-<div class="col-md-6">
-<label class="small mb-1" for="inputLocation">Location</label>
-<input class="form-control" id="inputLocation" type="text" placeholder="Enter your location" value="San Francisco, CA">
-</div>
-</div>
-
-<div class="mb-3">
-<label class="small mb-1" for="inputEmailAddress">Email address</label>
-<input class="form-control" id="inputEmailAddress" type="email" placeholder="Enter your email address" value="name@example.com">
-</div>
-
-<div class="row gx-3 mb-3">
-
-<div class="col-md-6">
-<label class="small mb-1" for="inputPhone">Phone number</label>
-<input class="form-control" id="inputPhone" type="tel" placeholder="Enter your phone number" value="555-123-4567">
-</div>
-
-<div class="col-md-6">
-<label class="small mb-1" for="inputBirthday">Birthday</label>
-<input class="form-control" id="inputBirthday" type="text" name="birthday" placeholder="Enter your birthday" value="06/10/1988">
-</div>
-</div>
-
-<button class="btn btn-primary" type="button">Save changes</button>
-</form>
-</div>
-</div>
-</div>
-</div>
+            <button class="btn btn-primary" type="button">Save changes</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

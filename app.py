@@ -1,6 +1,6 @@
-from flask import Flask
-from flask import render_template, request, redirect, url_for, flash, session
 import sqlite3
+from flask import Flask, render_template, request, redirect, url_for, flash, session
+
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -9,7 +9,7 @@ conn = sqlite3.connect("database.db")
 print("Opened database successfully")
 
 conn.execute(
-    "CREATE TABLE if not exists User (name TEXT,email TEXT, password TEXT, phone_no INT, DoB date, addr TEXT, city TEXT, pin TEXT, Qualification TEXT, About TEXT, IsSubscribed BOOLEAN DEFAULT 0)"
+    "CREATE TABLE if not exists User (name TEXT,email TEXT, password TEXT, phone_no INT, DoB date, addr TEXT,  pin TEXT, Qualification TEXT, Subject Text, About TEXT, IsSubscribed BOOLEAN DEFAULT 0, role TEXT DEFAULT 'job_seeker' )"
 )
 conn.execute(
     "CREATE TABLE if not exists Jobs (Company_name TEXT,Title TEXT, JD TEXT, Salary INT, Location TEXT, Duration TEXT)"
@@ -24,7 +24,7 @@ conn.close()
 
 @app.route("/")
 def index():
-    if "email" in session:
+    if "current_user" in session:
         return render_template("index.html")
     print("email not in session")
     return redirect(url_for("login"))
@@ -33,7 +33,7 @@ def index():
 @app.route("/about")
 def about():
     print(session)
-    if "email" in session:
+    if "current_user" in session:
         return render_template("about.html")
     print("email not in session")
     return redirect(url_for("login"))
@@ -41,7 +41,7 @@ def about():
 
 @app.route("/jobs")
 def jobs():
-    if "email" in session:
+    if "current_user" in session:
         return render_template("job.html")
     print("email not in session")
     return redirect(url_for("login"))
@@ -49,14 +49,15 @@ def jobs():
 
 @app.route("/premium")
 def premium():
-    if "email" in session:
+    if "current_user" in session:
         return render_template("premium.html")
     print("email not in session")
     return redirect(url_for("login"))
 
+
 @app.route("/profile")
 def profile():
-    if "email" in session:
+    if "current_user" in session:
         return render_template("profile.html")
     print("email not in session")
     return redirect(url_for("login"))
@@ -80,8 +81,8 @@ def loginuser():
                 cur = con.cursor()
                 user = cur.execute(
                     "SELECT * FROM User WHERE email = ?", (login_email,)
-                ).fetchall() 
-                print("Users are", user)
+                ).fetchall()
+
                 if len(user) == 0:
                     flash("Invalid Email")
                     print("Invalid Email")
@@ -91,9 +92,11 @@ def loginuser():
                     print("Invalid Password")
                     return redirect(url_for("login"))
 
-                session["email"] = login_email
-                session["name"] = user[0][0]
-                session["password"] = user[0][2]
+                # session["email"] = login_email
+                # session["name"] = user[0][0]
+                # session["password"] = user[0][2]
+                session["current_user"] = user[0]
+                print("current_user", session["current_user"])
 
         except:
             print("login failed")
@@ -139,10 +142,51 @@ def adduser():
 @app.route("/logout")
 def logout():
     # remove the username from the session if it's there
-    session.pop("username", None)
-    session.pop("email", None)
-    session.pop("password", None)
+    # session.pop("username", None)
+    # session.pop("email", None)
+    # session.pop("password", None)
+    session.pop("current_user", None)
     return redirect(url_for("login"))
+
+
+@app.route("/updateuser", methods=["POST", "GET"])
+def updateuser():
+    if request.method == "POST":
+        try:
+            uname = request.form["user_name"]
+            phone = request.form["phone"]
+            role = request.form["joblinkup-usage"]
+            pin = request.form["pincode"]
+            location = request.form["location"]
+            degree = request.form["degree"]
+            subject = request.form["subject"]
+            email = request.form["email"]
+            dob = request.form["birthday"]
+            desc = "none"
+
+            with sqlite3.connect("database.db") as con:
+                cur = con.cursor()
+                cur.execute(
+                    "UPDATE User SET name = ?, phone_no = ?, DoB = ?, addr = ?, pin = ?, Qualification = ?, Subject = ?, About = ?, role = ? WHERE email = ?",
+                    (
+                        uname,
+                        phone,
+                        dob,
+                        location,
+                        pin,
+                        degree,
+                        subject,
+                        desc,
+                        role,
+                        email,
+                    ),
+                )
+
+        except:
+            pass
+
+        finally:
+            return redirect(url_for("index"))
 
 
 if __name__ == "__main__":
