@@ -1,10 +1,16 @@
+import os
 import sqlite3
 import random 
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['ALLOWED_EXTENSIONS'] = {'pdf', 'doc', 'docx'}
+
+# Ensure the upload folder exists
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 conn = sqlite3.connect("./database.db")
 print("Opened database successfully")
@@ -256,19 +262,134 @@ def populate_job_listings():
     conn.close()
 
 # Call the function to populate job listings
-populate_job_listings()
+# populate_job_listings()
 
 
 @app.route('/jobs')
 def jobs():
+     
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+
+    # Execute a query to fetch job listings from the database
+    cursor.execute('SELECT * FROM Jobs')
+
+    # Fetch all job listings as a list of dictionaries
+    job_listings = []
+    for row in cursor.fetchall():
+        job_id, company_name, title, salary, location, duration, description, responsibilities, qualification = row
+        job = {
+            'ID': job_id,
+            'company': company_name,
+            'title': title,
+            'salary': salary,
+            'location': location,
+            'duration': duration,
+            'description': description,
+            'responsibilities': responsibilities,
+            'qualification': qualification
+        }
+        job_listings.append(job)
+
+    # Close the database connection
+    conn.close()
     # Replace this with your logic to fetch job listings from your database
-    job_listings = []  # Fetch job listings here
-    return render_template('jobb.html', job_listings=job_listings)
+    # Fetch job listings here
+    return render_template('job.html', job_listings=job_listings)
 
 @app.route('/job_details/<int:job_id>')
 def job_details(job_id):
-    # Replace this with your logic to fetch job details from your database based on the job_id
-    job = {}  # Fetch job details here
+    conn = sqlite3.connect('./database.db')
+    cursor = conn.cursor()
+    job_id = int(job_id)
+    # Execute a query to fetch job details based on job_id
+    cursor.execute('SELECT * FROM Jobs WHERE ID = ?', (job_id,))
+
+    # Fetch the job details as a dictionary
+    job = cursor.fetchone() # Convert the result tuple to a dictionary
+    print(job)
+    # Close the database connection
+    conn.close()
+
+    # if not job:
+    #     abort(404)  # Job not found, return a 404 error page
+
     return render_template('job_details.html', job=job)
+
+    # conn = sqlite3.connect('database.db')
+    # cursor = conn.cursor()
+
+    # # Execute a query to fetch job details based on job_id
+    # cursor.execute('SELECT * FROM Jobs WHERE ID = ?', (job_id,))
+
+    # # Fetch the job details as a dictionary
+    # job = cursor.fetchone()
+
+    # # Close the database connection
+    # conn.close()
+
+    # # if not job:
+    # #   abort(404)  # Job not found, return a 404 error page
+
+    # # # Replace this with your logic to fetch job details from your database based on the job_id
+    # # job = {}  # Fetch job details here
+    # return render_template('job_details.html', job=job)
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
+@app.route('/upload/<int:job_id>', methods=['GET', 'POST'])
+def upload_file(job_id):
+    if 'current_user' not in session:
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        file = request.files['resume']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)
+
+            # Update the database to associate the uploaded file with the job listing
+            conn = sqlite3.connect('database.db')
+            cursor = conn.cursor()
+            cursor.execute('UPDATE Jobs SET File_path = ? WHERE ID = ?', (file_path, job_id))
+            conn.commit()
+            conn.close()
+
+            flash('File uploaded successfully.')
+            return redirect(url_for('job_details', job_id=job_id))
+        else:
+            flash('Invalid file format. Allowed formats: pdf, doc, docx.')
+
+    return render_template('upload.html', job_id=job_id)
+
+# @app.route('/upload/<int:job_id>', methods=['GET', 'POST'])
+# def upload_file(job_id):
+#     if 'current_user' not in session:
+#         return redirect(url_for('login'))
+
+#     if request.method == 'POST':
+#         file = request.files['file']
+
+#         if file and allowed_file(file.filename):
+#             filename = secure_filename(file.filename)
+#             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+#             file.save(file_path)
+
+#             # Update the database to associate the uploaded file with the job listing
+#             conn = sqlite3.connect('database.db')
+#             cursor = conn.cursor()
+#             cursor.execute('UPDATE Jobs SET File_path = ? WHERE ID = ?', (file_path, job_id))
+#             conn.commit()
+#             conn.close()
+
+#             flash('File uploaded successfully.')
+#             return redirect(url_for('job_details', job_id=job_id))
+#         else:
+#             flash('Invalid file format. Allowed formats: pdf, doc, docx.')
+
+#     return render_template('upload.html', job_id=job_id)
+
 if __name__ == "__main__":
     app.run(debug=True)

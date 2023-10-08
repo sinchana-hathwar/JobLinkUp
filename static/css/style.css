@@ -142,6 +142,9 @@ a:focus {
   text-transform: uppercase;
 }
 
+.white-text {
+  color: white;
+}
 .custom_nav-container .navbar-nav .nav-item .nav-link span {
   margin-left: 5px;
 }

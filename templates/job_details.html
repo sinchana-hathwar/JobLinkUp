@@ -1,41 +1,41 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="job_section layout_padding">
-  <div class="container">
-    <div class="heading_container heading_center">
-      <h2>Job Details</h2>
-    </div>
-    <div class="job_container">
-      <div class="box">
-        <div class="job_content-box">
-          <div class="img-box">
-            <img src="{{ url_for('static', filename='images/' + job.company.lower() + '_logo.png') }}" alt="{{ job.company }}" />
-          </div>
-          <div class="detail-box">
-            <h5>{{ job.company }}</h5>
-            <h6>{{ job.title }}</h6>
-            <div class="detail-info">
-              <h6>
-                <i class="fa fa-map-marker" aria-hidden="true"></i>
-                <span>{{ job.location }}</span>
-              </h6>
-              <h6>
-                <i class="fa fa-money" aria-hidden="true"></i>
-                <span>{{ job.salary }}</span>
-              </h6>
-              <!-- Add more job details here -->
+<div class="job_details_section layout_padding">
+    <div class="container">
+        <div class="heading_container">
+            <h2 class="white-text">{{ job[2] }}</h2>
+        </div>
+        <div class="job_details">
+            <div class="row">
+                <div class="col-md-6">
+                    
+                </div>
+                <div class="col-md-6">
+                    <div class="job_info">
+                        <h3 class="white-text">{{ job[1] }}</h3>
+                        <h4 class="white-text">Location: {{ job[4] }}</h4>
+                        <h4 class="white-text">Salary: ${{ job[3] }}</h4>
+                        <h4 class="white-text">Duration: {{ job[5] }}</h4>
+                    </div>
+                </div>
             </div>
-          </div>
+            <div class="job_description">
+                <h3 class="white-text">Description:</h3>
+                <p class="white-text">{{ job[6] }}</p>
+            </div>
+            <div class="job_qualification">
+                <h3 class="white-text">Qualification:</h3>
+                <p class="white-text">{{ job[8] }}</p>
+            </div>
+            <div class="job_responsibilities">
+                <h3 class="white-text">Key Responsibilities:</h3>
+                <p class="white-text">{{ job[7] }}</p>
+            </div>
+            <div class="apply_btn">
+                <a href="{{ url_for('upload_file', job_id=job[0]) }}" class="apply-now-btn">Apply Now</a>
+            </div>
         </div>
-        <div class="option-box">
-          <button class="fav-btn">
-            <i class="fa fa-heart-o" aria-hidden="true"></i>
-          </button>
-          <a href="{{ url_for('jobs') }}" class="apply-btn">Back to Jobs</a>
-        </div>
-      </div>
     </div>
-  </div>
 </div>
 {% endblock %}
