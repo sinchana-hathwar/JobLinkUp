@@ -50,7 +50,7 @@ def jobs():
 @app.route("/premium")
 def premium():
     if "current_user" in session:
-        return render_template("premium.html")
+        return render_template("premium.html", userdata=session["current_user"])
     print("email not in session")
     return redirect(url_for("login"))
 
