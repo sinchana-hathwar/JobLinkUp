@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <style>
+        body {
+             /* Light violet background color */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            color: white; /* Text color set to white */
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: white; /* Text color set to white */
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: white; /* Text color set to white */
+        }
+
+        .job-roles {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .job-role {
+            background-color: #ffffff;  /*White background for job role blocks */
+            border: 1px solid #007bff; /*Blue border*/
+            padding: 20px;
+            margin: 10px;
+            border-radius: 5px;
+            text-align: center;
+            width: calc(25% - 20px); /* 25% width for each block, considering margin */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  Box shadow for a subtle effect */
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            text-align: center; /* Center job roles */
+        }
+
+        a {
+            text-decoration: none;
+            color: #333; /* Text color */
+        }
+
+        .job-link {
+            font-weight: bold;
+            color: #333; /* Text color */
+        }
+
+        .job-link:hover {
+            color: #007bff; /* Change text color on hover */
+        }
+    </style>
+     <br>
+     <br>
+     <br>
+     <br>
+     <br>
+     <br>
+     <br>
+     <br>
+     <br>
+    <div class="container">
+        <h1 class="text-center mt-4">Welcome to Interview Tips</h1>
+        <br>
+        <br>
+
+        <h2 class="text-center mb-3">Choose a Job Role:</h2>
+        <div class="job-roles">
+            <div class="job-role">
+                <a href="/softwareEngineer" class="job-link">Software Engineer</a>
+            </div>
+            <div class="job-role">
+                <a href="/data_analyst" class="job-link">Data Analyst</a>
+            </div>
+            <div class="job-role">
+                <a href="/project_manager" class="job-link">Project Manager</a>
+            </div>
+            <div class="job-role">
+                <a href="/data_engineer" class="job-link">Data Engineer</a>
+            </div>
+            <div class="job-role">
+                <a href="/data_scientist" class="job-link">Data Scientist</a>
+            </div>
+            <div class="job-role">
+                <a href="/uiux" class="job-link">UX Designer</a>
+            </div>
+            <div class="job-role">
+                <a href="/DMM" class="job-link">Digital Marketing Specialist</a>
+            </div>
+            <div class="job-role">
+                <a href="/business_analyst" class="job-link">Business Analyst</a>
+            </div>
+            <div class="job-role">
+                <a href="/AIML" class="job-link">AI/ML Engineer</a>
+            </div>
+            <div class="job-role">
+                <a href="/DevOps" class="job-link">DevOps Engineer</a>
+            </div>
+            <!-- Add more job roles with appropriate URLs as needed -->
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+{% endblock %}

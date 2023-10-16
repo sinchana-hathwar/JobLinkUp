@@ -1,7 +1,7 @@
 import os
 import sqlite3
 import random 
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, abort
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -27,6 +27,7 @@ for table in tables:
 conn.execute(
     "CREATE TABLE if not exists User (name TEXT,email TEXT, password TEXT, phone_no INT, DoB date, addr TEXT,  pin TEXT, Qualification TEXT, Subject Text, About TEXT, IsSubscribed BOOLEAN DEFAULT 0, role TEXT DEFAULT 'job_seeker' )"
 )
+
 conn.execute(
     "CREATE TABLE if not exists Jobs (ID INTEGER PRIMARY KEY AUTOINCREMENT,Company_name TEXT NOT NULL,Title TEXT NOT NULL,Salary INTEGER,Location TEXT,Duration TEXT,Description TEXT,Responsibilities TEXT,Qualification TEXT)"
 )
@@ -35,9 +36,13 @@ conn.execute(
 )
 
 print("Table created successfully")
+conn.commit()
 conn.close()
 
-
+def get_db_connection():
+    conn = sqlite3.connect("./database.db")
+    conn.row_factory = sqlite3.Row
+    return conn
 @app.route("/")
 def index():
     if "current_user" in session:
@@ -53,15 +58,6 @@ def about():
         return render_template("about.html")
     print("email not in session")
     return redirect(url_for("login"))
-
-
-# @app.route("/jobs")
-# def jobs():
-#     job_listings = [] 
-#     if "current_user" in session:
-#         return render_template("job.html")
-#     print("email not in session")
-#     return redirect(url_for("login"))
 
 
 @app.route("/premium")
@@ -158,10 +154,6 @@ def adduser():
 
 @app.route("/logout")
 def logout():
-    # remove the username from the session if it's there
-    # session.pop("username", None)
-    # session.pop("email", None)
-    # session.pop("password", None)
     session.pop("current_user", None)
     return redirect(url_for("login"))
 
@@ -204,10 +196,38 @@ def updateuser():
 
         finally:
             return redirect(url_for("index"))
-        
-def populate_job_listings():
-    conn = sqlite3.connect('database.db')
 
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
+# @app.route('/upload/<int:job_id>', methods=['GET', 'POST'])
+# def upload_file(job_id):
+#     if 'current_user' not in session:
+#         return redirect(url_for('login'))
+
+#     if request.method == 'POST':
+#         file = request.files['resume']
+#         if file and allowed_file(file.filename):
+#             filename = secure_filename(file.filename)
+#             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+#             file.save(file_path)
+
+#             # Update the database to associate the uploaded file with the job listing
+#             conn = sqlite3.connect('database.db')
+#             cursor = conn.cursor()
+#             cursor.execute('UPDATE Jobs SET File_path = ? WHERE ID = ?', (file_path, job_id))
+#             conn.commit()
+#             conn.close()
+
+#             flash('File uploaded successfully.')
+#             return redirect(url_for('job_details', job_id=job_id))
+#         else:
+#             flash('Invalid file format. Allowed formats: pdf, doc, docx.')
+
+#     return render_template('upload.html', job_id=job_id)
+
+def populate_job_listings():
+    conn = sqlite3.connect("./database.db")
     cur = conn.cursor()
 
     companies = ["TCS", "IBM", "Infosys", "Wipro", "Accenture", "Dell", "ABB", "Microsoft", "Google", "Amazon"]
@@ -216,59 +236,87 @@ def populate_job_listings():
     locations = ["Bangalore", "Pune", "Chennai", "Hyderabad", "Mumbai"]
 
     job_data = {
-        "TCS": {
-            "Description": "TCS is a multinational IT services and consulting company.",
-            "responsibilities": "TCS employees work on various IT projects for clients worldwide."
+        "Software Engineer": {
+            "qualification": "Bachelor's degree in Computer Science or related field",
+            "description": "Join our team as a Software Engineer and work on cutting-edge software projects.",
+            "responsibilities": "Develop and maintain software applications."
         },
-        "IBM": {
-            "Description": "IBM is a global technology company that provides hardware, software, and services.",
-            "responsibilities": "IBM employees are involved in cutting-edge technology and innovation."
+        "Data Analyst": {
+            "qualification": "Bachelor's degree in Statistics, Data Science, or related field",
+            "description": "Become a Data Analyst and analyze data to provide valuable insights.",
+            "responsibilities": "Collect, clean, and analyze data to support business decisions."
         },
-        # Add descriptions and responsibilities for other companies here...
+        "Web Developer": {
+            "qualification": "Bachelor's degree in Web Development or related field",
+            "description": "Join us as a Web Developer and create stunning websites and web applications.",
+            "responsibilities": "Design and develop web solutions for clients."
+        },
+        "Database Administrator": {
+            "qualification": "Bachelor's degree in Database Management or related field",
+            "description": "Work as a Database Administrator and manage databases for optimal performance.",
+            "responsibilities": "Ensure data security and efficient database operations."
+        },
+        "Network Engineer": {
+            "qualification": "Bachelor's degree in Network Engineering or related field",
+            "description": "Join our team as a Network Engineer and build and maintain network infrastructure.",
+            "responsibilities": "Design and implement network solutions to meet business needs."
+        },
+        "UX Designer": {
+            "qualification": "Bachelor's degree in UX/UI Design or related field",
+            "description": "Become a UX Designer and create user-centered designs for web and mobile applications.",
+            "responsibilities": "Design intuitive and visually appealing user interfaces."
+        },
+        "Digital Marketing Specialist": {
+            "qualification": "Bachelor's degree in Marketing or related field",
+            "description": "Join as a Digital Marketing Specialist and drive online marketing campaigns.",
+            "responsibilities": "Plan and execute digital marketing strategies."
+        },
+        "Business Analyst": {
+            "qualification": "Bachelor's degree in Business Administration or related field",
+            "description": "Work as a Business Analyst and analyze business processes.",
+            "responsibilities": "Gather and document business requirements."
+        },
+        "AI/ML Engineer": {
+            "qualification": "Bachelor's degree in Computer Science or AI/ML",
+            "description": "Join as an AI/ML Engineer and develop machine learning models.",
+            "responsibilities": "Design and train AI/ML algorithms."
+        },
+        "DevOps Engineer": {
+            "qualification": "Bachelor's degree in Computer Science or related field",
+            "description": "Join as a DevOps Engineer and automate software development processes.",
+            "responsibilities": "Build and maintain CI/CD pipelines."
+        }
     }
-    # ...
+    
     for company in companies:
         for _ in range(5):  # Insert 5 job listings per company (adjust as needed)
             title = random.choice(job_titles)
             salary = random.randint(50000, 150000)
             location = random.choice(locations)
             duration = random.choice(["Full-time", "Part-time", "Contract"])
-            company_description = job_data.get(company, {}).get("Description", "Description not available")
-            company_responsibilities = job_data.get(company, {}).get("responsibilities", "Responsibilities not available")
+            company_description = job_data.get(title, {}).get("description", "Description not available")
+            company_responsibilities = job_data.get(title, {}).get("responsibilities", "Responsibilities not available")
+            qualification = job_data.get(title, {}).get("qualification", "Qualification not available")
 
             # Replace this with your actual data insertion logic into your database table
             insert_sql = '''
-            INSERT INTO Jobs (Company_name, Title, Salary, Location, Duration, Description, Responsibilities)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO Jobs (Company_name, Title, Salary, Location, Duration, Description, Responsibilities, Qualification)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             '''
 
-            # Correct the variable names here
-            job_data_tuple = (company, title, salary, location, duration, company_description, company_responsibilities)
+            job_data_tuple = (company, title, salary, location, duration, company_description, company_responsibilities, qualification)
 
-            cur.execute(insert_sql, job_data_tuple)  # Use the corrected variable name
-    # ...
-             
-            # # Replace this with your actual data insertion logic into your database table
-            # insert_sql = '''
-            # INSERT INTO Jobs (Company_name, Title, Salary, Location, Duration, Description, Responsibilities)
-            # VALUES (?, ?, ?, ?, ?, ?, ?)
-            # '''
-
-            # job_data = (company, title, salary, location, duration, company_description, company_responsibilities)
-
-            # cur.execute(insert_sql, job_data)
+            cur.execute(insert_sql, job_data_tuple)
 
     conn.commit()
     conn.close()
 
 # Call the function to populate job listings
-# populate_job_listings()
-
+populate_job_listings()
 
 @app.route('/jobs')
 def jobs():
-     
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect("./database.db")
     cursor = conn.cursor()
 
     # Execute a query to fetch job listings from the database
@@ -290,79 +338,29 @@ def jobs():
             'qualification': qualification
         }
         job_listings.append(job)
-
-    # Close the database connection
+    conn.commit()
     conn.close()
-    # Replace this with your logic to fetch job listings from your database
-    # Fetch job listings here
+
     return render_template('job.html', job_listings=job_listings)
+
+# Rest of your routes and code...
+# ... (Previous code)
 
 @app.route('/job_details/<int:job_id>')
 def job_details(job_id):
     conn = sqlite3.connect('./database.db')
     cursor = conn.cursor()
     job_id = int(job_id)
-    # Execute a query to fetch job details based on job_id
+
     cursor.execute('SELECT * FROM Jobs WHERE ID = ?', (job_id,))
-
-    # Fetch the job details as a dictionary
-    job = cursor.fetchone() # Convert the result tuple to a dictionary
-    print(job)
-    # Close the database connection
+    job = cursor.fetchone()
+    conn.commit()
     conn.close()
-
-    # if not job:
-    #     abort(404)  # Job not found, return a 404 error page
 
     return render_template('job_details.html', job=job)
 
-    # conn = sqlite3.connect('database.db')
-    # cursor = conn.cursor()
-
-    # # Execute a query to fetch job details based on job_id
-    # cursor.execute('SELECT * FROM Jobs WHERE ID = ?', (job_id,))
-
-    # # Fetch the job details as a dictionary
-    # job = cursor.fetchone()
-
-    # # Close the database connection
-    # conn.close()
-
-    # # if not job:
-    # #   abort(404)  # Job not found, return a 404 error page
-
-    # # # Replace this with your logic to fetch job details from your database based on the job_id
-    # # job = {}  # Fetch job details here
-    # return render_template('job_details.html', job=job)
-
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
-
-@app.route('/upload/<int:job_id>', methods=['GET', 'POST'])
-def upload_file(job_id):
-    if 'current_user' not in session:
-        return redirect(url_for('login'))
-
-    if request.method == 'POST':
-        file = request.files['resume']
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(file_path)
-
-            # Update the database to associate the uploaded file with the job listing
-            conn = sqlite3.connect('database.db')
-            cursor = conn.cursor()
-            cursor.execute('UPDATE Jobs SET File_path = ? WHERE ID = ?', (file_path, job_id))
-            conn.commit()
-            conn.close()
-
-            flash('File uploaded successfully.')
-            return redirect(url_for('job_details', job_id=job_id))
-        else:
-            flash('Invalid file format. Allowed formats: pdf, doc, docx.')
-
-    return render_template('upload.html', job_id=job_id)
 
 # @app.route('/upload/<int:job_id>', methods=['GET', 'POST'])
 # def upload_file(job_id):
@@ -370,15 +368,13 @@ def upload_file(job_id):
 #         return redirect(url_for('login'))
 
 #     if request.method == 'POST':
-#         file = request.files['file']
-
+#         file = request.files['resume']
 #         if file and allowed_file(file.filename):
 #             filename = secure_filename(file.filename)
 #             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 #             file.save(file_path)
 
-#             # Update the database to associate the uploaded file with the job listing
-#             conn = sqlite3.connect('database.db')
+#             conn = sqlite3.connect("./database.db")
 #             cursor = conn.cursor()
 #             cursor.execute('UPDATE Jobs SET File_path = ? WHERE ID = ?', (file_path, job_id))
 #             conn.commit()
@@ -390,6 +386,67 @@ def upload_file(job_id):
 #             flash('Invalid file format. Allowed formats: pdf, doc, docx.')
 
 #     return render_template('upload.html', job_id=job_id)
+@app.route("/features")
+def features():
+    return render_template("features.html")
+
+@app.route("/upload")
+def upload():
+    return render_template("upload.html")
+
+@app.route("/subscribe")
+def subscribe():
+    return render_template("subscribe.html")
+
+@app.route("/payment")
+def payment():
+    return render_template("payment.html")
+
+@app.route("/interviewhelper")
+def interviewhelper():
+    return render_template("interviewhelper.html")
+
+@app.route("/business_analyst")
+def business_analyst():
+    return render_template("business_analyst.html")
+
+@app.route("/data_scientist")
+def data_scientist():
+    return render_template("data_scientist.html")
+
+@app.route("/softwareEngineer")
+def softwareEngineer():
+    return render_template("softwareEngineer.html")
+
+@app.route("/project_manager")
+def project_manager():
+    return render_template("project_manager.html")
+
+@app.route("/data_engineer")
+def data_engineer():
+    return render_template("data_engineer.html")
+
+
+@app.route("/uiux")
+def uiux():
+    return render_template("uiux.html")
+
+@app.route("/data_analyst")
+def data_analyst():
+    return render_template("data_analyst.html")
+
+@app.route("/DevOps")
+def DevOps():
+    return render_template("DevOps.html")
+
+@app.route("/DMM")
+def DMM():
+    return render_template("DMM.html")
+
+@app.route("/AIML")
+def AIML():
+    return render_template("AIML.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
+
