@@ -1,236 +1,48 @@
-{% extends "base.html" %} {% block content %}
-</div>
-<!-- job section -->
-<section class="job_section layout_padding">
-  <div class="container">
-    <div class="heading_container heading_center">
-      <h2>Featured Jobs</h2>
-    </div>
-    <div class="job_container">
-      <!-- <h4 class="job_heading">
-          Featured Jobs
-        </h4> -->
-      <div class="row">
-        <div class="col-lg-6">
-          <div class="box">
-            <div class="job_content-box">
-              <div class="img-box">
-                <img
-                  src="{{url_for('static',filename = 'images/Tcs_logo.png')}}"
-                  alt=""
-                />
-              </div>
-              <div class="detail-box">
-                <h5>TCS</h5>
-                <h6>Data Analyst</h6>
-                <div class="detail-info">
-                  <h6>
-                    <i class="fa fa-map-marker" aria-hidden="true"></i>
-                    <span> Bangalore </span>
-                  </h6>
-                  <h6>
-                    <i class="fa fa-money" aria-hidden="true"></i>
-                    <span> Rs 35,000 - Rs 50,000 </span>
-                  </h6>
-                </div>
-              </div>
-            </div>
-            <div class="option-box">
-              <button class="fav-btn">
-                <i class="fa fa-heart-o" aria-hidden="true"></i>
-              </button>
-              <a href="" class="apply-btn"> Apply Now </a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="box">
-            <div class="job_content-box">
-              <div class="img-box">
-                <img
-                  src="{{url_for('static',filename = 'images/Infosys logo.jpg')}}"
-                  alt=""
-                />
-              </div>
-              <div class="detail-box">
-                <h5>Infosys</h5>
-                <h6>Data Scientist</h6>
-                <div class="detail-info">
-                  <h6>
-                    <i class="fa fa-map-marker" aria-hidden="true"></i>
-                    <span> Chennai </span>
-                  </h6>
-                  <h6>
-                    <i class="fa fa-money" aria-hidden="true"></i>
-                    <span> Rs 30,000 - Rs 40,000 </span>
-                  </h6>
-                </div>
-              </div>
-            </div>
-            <div class="option-box">
-              <button class="fav-btn">
-                <i class="fa fa-heart-o" aria-hidden="true"></i>
-              </button>
-              <a href="" class="apply-btn"> Apply Now </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="job_container">
-      <!-- <h4 class="job_heading">
-          Recent Jobs
-        </h4> -->
-      <div class="row">
-        <div class="col-lg-6">
-          <div class="box">
-            <div class="job_content-box">
-              <div class="img-box">
-                <img
-                  src="{{url_for('static',filename = 'images/dell logo.png')}}"
-                  alt=""
-                />
-              </div>
-              <div class="detail-box">
-                <h5>Dell</h5>
-                <h6>Software Engineer</h6>
-                <div class="detail-info">
-                  <h6>
-                    <i class="fa fa-map-marker" aria-hidden="true"></i>
-                    <span> Pune </span>
-                  </h6>
-                  <h6>
-                    <i class="fa fa-money" aria-hidden="true"></i>
-                    <span> Rs 75,000/mo </span>
-                  </h6>
-                </div>
-              </div>
-            </div>
-            <div class="option-box">
-              <button class="fav-btn">
-                <i class="fa fa-heart-o" aria-hidden="true"></i>
-              </button>
-              <a href="" class="apply-btn"> Apply Now </a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="box">
-            <div class="job_content-box">
-              <div class="img-box">
-                <img
-                  src="{{url_for('static',filename = 'images/ABB-Logo.png')}}"
-                  alt=""
-                />
-              </div>
-              <div class="detail-box">
-                <h5>ABB</h5>
-                <h6>Accountant</h6>
-                <div class="detail-info">
-                  <h6>
-                    <i class="fa fa-map-marker" aria-hidden="true"></i>
-                    <span> Bangalore </span>
-                  </h6>
-                  <h6>
-                    <i class="fa fa-money" aria-hidden="true"></i>
-                    <span> Rs 40,000 </span>
-                  </h6>
-                </div>
-              </div>
-            </div>
-            <div class="option-box">
-              <button class="fav-btn">
-                <i class="fa fa-heart-o" aria-hidden="true"></i>
-              </button>
-              <a href="" class="apply-btn"> Apply Now </a>
-            </div>
-          </div>
-        </div>
-        <!-- <div class="col-lg-6">
-            <div class="box">
-              <div class="job_content-box">
-                <div class="img-box">
-                  <img src="images/job_logo5.png" alt="">
-                </div>
-                <div class="detail-box">
-                  <h5>
-                    Looking WordPress Developer for ThemeForest
-                  </h5>
-                  <div class="detail-info">
-                    <h6>
-                      <i class="fa fa-map-marker" aria-hidden="true"></i>
-                      <span>
-                        Washington. D.C.
-                      </span>
-                    </h6>
-                    <h6>
-                      <i class="fa fa-money" aria-hidden="true"></i>
-                      <span>
-                        $400 - $540
-                      </span>
-                    </h6>
-                  </div>
-                </div>
-              </div>
-              <div class="option-box">
-                <button class="fav-btn">
-                  <i class="fa fa-heart-o" aria-hidden="true"></i>
-                </button>
-                <a href="" class="apply-btn">
-                  Apply Now
-                </a>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-6">
-            <div class="box">
-              <div class="job_content-box">
-                <div class="img-box">
-                  <img src="images/job_logo4.png" alt="">
-                </div>
-                <div class="detail-box">
-                  <h5>
-                    Hiring Web Designer for Project
-                  </h5>
-                  <div class="detail-info">
-                    <h6>
-                      <i class="fa fa-map-marker" aria-hidden="true"></i>
-                      <span>
-                        Washington. D.C.
-                      </span>
-                    </h6>
-                    <h6>
-                      <i class="fa fa-money" aria-hidden="true"></i>
-                      <span>
-                        $350 - $450
-                      </span>
-                    </h6>
-                  </div>
-                </div>
-              </div>
-              <div class="option-box">
-                <button class="fav-btn">
-                  <i class="fa fa-heart-o" aria-hidden="true"></i>
-                </button>
-                <a href="" class="apply-btn">
-                  Apply Now
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="btn-box">
-        <a href="">
-          View All
-        </a>
-      </div>
-    </div>
-  </section> -->
-        <!-- end job section -->
+{% extends "base.html" %}
 
-        {% endblock %}
-      </div>
+{% block content %}
+<div class="job_section layout_padding">
+    <div class="container">
+        <div class="heading_container heading_center">
+            <h2>Featured Jobs</h2>
+        </div>
+        <div class="row">
+            {% for job in job_listings %}
+            <div class="col-md-6"> <!-- Each column takes up half the width of the container -->
+                <div class="box">
+                    <div class="job_content-box">
+                        <div class="img-box">
+                            <img src="{{ url_for('static', filename='images/' + job.company.lower() + '_logo.png') }}" alt="{{ job.company }}" />
+                        </div>
+                        <div class="detail-box">
+                            <h5>{{ job.company }}</h5>
+                            <h6>{{ job.title }}</h6>
+                            <div class="detail-info">
+                                <h6>
+                                    <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                    <span>{{ job.location }}</span>
+                                </h6>
+                                <h6>
+                                    <i class="fa fa-money" aria-hidden="true"></i>
+                                    <span>{{ job.salary }}</span>
+                                </h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="option-box">
+                        <button class="fav-btn">
+                            <i class="fa fa-heart-o" aria-hidden="true"></i>
+                        </button>
+                        <a href="{{ url_for('job_details', job_id=job.ID) }}" class="apply-btn">Apply Now</a>
+                    </div>
+                </div>
+            </div>
+            {% if loop.index % 2 == 0 %} <!-- Close the row and start a new one for every second job -->
+        </div>
+        <div class="row">
+            {% endif %}
+            {% endfor %}
+        </div>
     </div>
-  </div>
-</section>
+</div>
+{% endblock %}

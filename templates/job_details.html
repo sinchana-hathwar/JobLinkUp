@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="job_details_section layout_padding">
+    <div class="container">
+        <div class="heading_container">
+            <h2 class="white-text">{{ job[2] }}</h2>
+        </div>
+        <div class="job_details">
+            <div class="row">
+                <div class="col-md-6">
+                    
+                </div>
+                <div class="col-md-6">
+                    <div class="job_info">
+                        <h3 class="white-text">{{ job[1] }}</h3>
+                        <h4 class="white-text">Location: {{ job[4] }}</h4>
+                        <h4 class="white-text">Salary: ${{ job[3] }}</h4>
+                        <h4 class="white-text">Duration: {{ job[5] }}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="job_description">
+                <h3 class="white-text">Description:</h3>
+                <p class="white-text">{{ job[6] }}</p>
+            </div>
+            <div class="job_qualification">
+                <h3 class="white-text">Qualification:</h3>
+                <p class="white-text">{{ job[8] }}</p>
+            </div>
+            <div class="job_responsibilities">
+                <h3 class="white-text">Key Responsibilities:</h3>
+                <p class="white-text">{{ job[7] }}</p>
+            </div>
+            <div class="apply_btn">
+                <a href="/upload" class="apply-now-btn">Apply Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

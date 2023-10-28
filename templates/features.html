@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Your Premium Page{% endblock %}
+
+{% block heading %}Welcome to Premium Page{% endblock %}
+
+{% block content %}
+    <h3>The features available are</h3>
+    <div class="premium-feature">
+        <h2>Interview Helper</h2>
+        <p>Interview Helper is a versatile tool designed to provide interview tips and guidance.</p>
+        <p>Users can select specific job roles, allowing the platform to offer role-specific insights</p>
+        <p>and advice, enhancing their interview preparation and performance</p>
+    </div>
+    <div class="premium-feature">
+        <h2>Resume Builder</h2>
+        <p>Resume Builder offers professionally designed templates for crafting impressive resumes.</p>
+        <p>Users can easily select and download templates that best suit their needs, simplifying</p>
+        <p>the resume creation process and helping them stand out in their job applications.</p>
+    </div>
+    <div class="subscribe-button">
+        <a href="{{ url_for('subscribe') }}" class="button">Subscribe Now</a>
+    </div>
+{% endblock %}
