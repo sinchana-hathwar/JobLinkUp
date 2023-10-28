@@ -1,6 +1,35 @@
-{% extends "base.html" %} {% block content %}
-<div style="height: 100%" class="card-header">
-  {% if userdata[-2] == 0 %} use less person {% endif %} {% if userdata[-2] == 1
-  %} {% endif %}
+
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<br>
+
+<div class="container text-center">
+    <!-- <h1 class="text-white">Premium Features</h1> -->
+    <div class="premium-feature">
+        <h2 class="text-white">Interview Helper</h2>
+        <p class="text-white">Interview Helper is a versatile tool designed to provide interview tips and guidance.</p>
+        <p class="text-white">Users can select specific job roles, allowing the platform to offer role-specific insights</p>
+        <p class="text-white">and advice, enhancing their interview preparation and performance</p>
+    </div> 
+    <div class="premium-feature" >
+        <h2 class="text-white">Resume Builder</h2>
+        <p class="text-white">Resume Builder offers professionally designed templates for crafting impressive resumes.</p>
+        <p class="text-white">Users can easily select and download templates that best suit their needs, simplifying</p>
+        <p class="text-white">the resume creation process and helping them stand out in their job applications.</p>
+    </div> 
+    <div class="subscribe-box">
+        <!-- <h2 class="text-white">Subscribe Now</h2> -->
+        <a href="{{ url_for('subscribe') }}" class="button" style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px;">Subscribe</a> 
+    </div> 
 </div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
 {% endblock %}
