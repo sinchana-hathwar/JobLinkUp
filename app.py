@@ -341,7 +341,7 @@ def jobs():
         cursor.execute('SELECT * FROM Jobs where Company_name like ? and Location = ? ',('%'+search_filter['company_name']+'%',search_filter['location']))
         
     elif (search_filter['job_title'] != 'All') and (search_filter['company_name']== '') and (search_filter['location']!='All Locations'):
-        cursor.execute('SELECT * FROM Jobs where Title like \'%?%\' and Location = ? ',(search_filter['job_title'],search_filter['location']))
+        cursor.execute('SELECT * FROM Jobs where Title = ? and Location = ? ',(search_filter['job_title'],search_filter['location']))
 
     elif (search_filter['job_title'] != 'All') and (search_filter['company_name']!= '') and (search_filter['location']=='All Locations'):
         cursor.execute('SELECT * FROM Jobs where Company_name like ? and Title = ? ',('%'+search_filter['company_name']+'%',search_filter['job_title']))    
