@@ -3,6 +3,7 @@ import sqlite3
 import random 
 from flask import Flask, render_template, request, redirect, url_for, flash, session, abort
 from werkzeug.utils import secure_filename
+import json
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -43,12 +44,22 @@ def get_db_connection():
     conn = sqlite3.connect("./database.db")
     conn.row_factory = sqlite3.Row
     return conn
-@app.route("/")
+@app.route("/", methods = ('GET', 'POST'))
 def index():
     if "current_user" in session:
+        if request.method == 'POST':
+            job_title = request.form.get('job_title')
+            location = request.form.get('location')
+            company_name = request.form.get('company_name')
+
+            search_filter = {'job_title': job_title , 'location': location, 'company_name': company_name }
+            print(search_filter)
+            return redirect(url_for('jobs',search_filter=json.dumps(search_filter)))
         return render_template("index.html")
     print("email not in session")
     return redirect(url_for("login"))
+
+
 
 
 @app.route("/about")
@@ -314,13 +325,36 @@ def populate_job_listings():
 # Call the function to populate job listings
 populate_job_listings()
 
-@app.route('/jobs')
+@app.route('/jobs', methods = ['GET'])
 def jobs():
+    search_filter = request.args.get('search_filter', default=json.dumps({}), type=str)
+    search_filter = json.loads(search_filter)
+    print(search_filter,'are the search filters')
     conn = sqlite3.connect("./database.db")
     cursor = conn.cursor()
-
+    
     # Execute a query to fetch job listings from the database
-    cursor.execute('SELECT * FROM Jobs')
+    if (search_filter == {}) or  ((search_filter['job_title'] == 'All') and (search_filter['company_name']== '') and (search_filter['location']=='All Locations')):
+        cursor.execute('SELECT * FROM Jobs')
+
+    elif (search_filter['job_title'] == 'All') and (search_filter['company_name']!= '') and (search_filter['location']!='All Locations'):
+        cursor.execute('SELECT * FROM Jobs where Company_name like ? and Location = ? ',('%'+search_filter['company_name']+'%',search_filter['location']))
+        
+    elif (search_filter['job_title'] != 'All') and (search_filter['company_name']== '') and (search_filter['location']!='All Locations'):
+        cursor.execute('SELECT * FROM Jobs where Title like \'%?%\' and Location = ? ',(search_filter['job_title'],search_filter['location']))
+
+    elif (search_filter['job_title'] != 'All') and (search_filter['company_name']!= '') and (search_filter['location']=='All Locations'):
+        cursor.execute('SELECT * FROM Jobs where Company_name like ? and Title = ? ',('%'+search_filter['company_name']+'%',search_filter['job_title']))    
+
+    elif (search_filter['job_title'] != 'All') and (search_filter['company_name']!= '') and (search_filter['location']!='All Locations'):
+        cursor.execute('SELECT * FROM Jobs where Company_name like ? and Title = ? and Location = ?',('%'+search_filter['company_name']+'%',search_filter['job_title'], search_filter['location']))
+    
+    elif (search_filter['job_title'] != 'All') and (search_filter['company_name']== '') and (search_filter['location']=='All Locations'):
+        cursor.execute('SELECT * FROM Jobs where Title = ? ',(search_filter['job_title'],))
+    elif (search_filter['job_title'] == 'All') and (search_filter['company_name']!= '') and (search_filter['location']=='All Locations'):
+        cursor.execute("SELECT * FROM Jobs where Company_name like ?",('%'+search_filter['company_name']+'%',))
+    elif (search_filter['job_title'] == 'All') and (search_filter['company_name']== '') and (search_filter['location']!='All Locations'):
+        cursor.execute('SELECT * FROM Jobs where Location = ? ',(search_filter['location'],))    
 
     # Fetch all job listings as a list of dictionaries
     job_listings = []
