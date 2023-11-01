@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Resume Templates{% endblock %}
+
+{% block content %}
+    <h1 style="text-align: center; color: white;">Welcome to Resume Builder</h1>
+   <br>
+   <br>
+   <br>
+    <!-- Provide links to the template files with download icons -->
+    <div class="template-container">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='resume.css') }}">
+        <div class="pdf-row">
+        <div class="pdf-embed">
+            <embed src="{{ url_for('static', filename='Vienna-Modern-Resume-Template.pdf') }}" type="application/pdf" height="200" />
+            <a href="{{ url_for('static', filename='Vienna-Modern-Resume-Template.pdf') }}"  download>
+                <i class="fa fa-download"></i>
+            </a>
+        </div>
+        <br>
+        <br>
+        <div class="pdf-embed">
+            <embed src="{{ url_for('static', filename='Dublin-Resume-Template-Modern.pdf') }}" type="application/pdf" height="200" />
+            <a href="{{ url_for('static', filename='Dublin-Resume-Template-ModernResume2.pdf') }}" download>
+                <i class="fa fa-download"></i>
+            </a>
+        </div>
+        </div>
+        <br>
+        <br>
+        <div class="pdf-row">
+        <div class="pdf-embed">
+            <embed src="{{ url_for('static', filename='Amsterdam-Modern-Resume-Template (3).pdf') }}" type="application/pdf" height="200" />
+            <a href="{{ url_for('static', filename='Amsterdam-Modern-Resume-Template (3).pdf') }}" download>
+                <i class="fa fa-download"></i>
+            </a>
+        </div>
+        <br>
+        <br>
+        <div class="pdf-embed">
+            <embed src="{{ url_for('static', filename='Moscow-Creative-Resume-Template.pdf') }}" type="application/pdf" height="200" />
+            <a href="{{ url_for('static', filename='Moscow-Creative-Resume-Template.pdf') }}" download>
+                <i class="fa fa-download"></i>
+            </a>
+        </div>
+        </div>
+        <br>
+        <br>
+        <div class="pdf-row">
+        <div class="pdf-embed">
+            <embed src="{{ url_for('static', filename='New-York-Resume-Template-Creative (4).pdf') }}" type="application/pdf" height="200" />
+            <a href="{{ url_for('static', filename='New-York-Resume-Template-Creative (4).pdf') }}" download>
+                <i class="fa fa-download"></i>
+            </a>
+        </div>
+        <br>
+        <br>
+        <div class="pdf-embed">
+            <embed src="{{ url_for('static', filename='Sydney-Resume-Template-Modern (1).pdf') }}" type="application/pdf" height="200" />
+            <a href="{{ url_for('static', filename='Sydney-Resume-Template-Modern (1).pdf') }}" download>
+                <i class="fa fa-download"></i>
+            </a>
+        </div>
+       </div> 
+    </div>
+
+    <!-- Add the CSS styling using a <style> tag -->
+<style>
+    .template-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .pdf-row {
+        width: 30%; /* Adjust the width as needed for your layout */
+        margin-bottom: 20px; /* Adjust the margin as needed */
+    }
+
+     /* Add your styling for the PDF embed here */
+</style>
+{% endblock %}
