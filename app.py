@@ -458,6 +458,10 @@ def resume_templates():
     # ]
     
     return render_template('resume.html')
+@app.route("/subscribers")
+def subscribers():
+    return render_template("subscribers.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)
