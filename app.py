@@ -481,6 +481,22 @@ def DMM():
 def AIML():
     return render_template("AIML.html")
 
+@app.route('/resume')
+def resume_templates():
+    # Define a list of templates with their URLs
+    # templates = [
+    #     {'name': 'New York Resume Template Creative', 'url': 'static/pdf/New-York-Resume-Template-Creative.pdf'},
+    #     {'name': 'Moscow-Creative-Resume-Template', 'url': 'static/pdf/Moscow-Creative-Resume-Template.pdf'},
+    #     {'name': 'Sydney-Resume-Template-Modern', 'url': 'static/pdf/Sydney-Resume-Template-Modern (1).pdf'},
+    #     # Add more templates as needed
+    # ]
+    
+    return render_template('resume.html')
+@app.route("/subscribers")
+def subscribers():
+    return render_template("subscribers.html")
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0' , port=80,debug=True)
 
