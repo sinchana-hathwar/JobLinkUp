@@ -1,16 +1,25 @@
 import os
 import sqlite3
-import random 
-from flask import Flask, render_template, request, redirect, url_for, flash, session, abort
+import random
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    flash,
+    session,
+    abort,
+)
 from werkzeug.utils import secure_filename
 import json
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-app.config['UPLOAD_FOLDER'] = 'uploads'
-app.config['ALLOWED_EXTENSIONS'] = {'pdf', 'doc', 'docx'}
-app.config['MAX_CONTENT_PATH'] = 5*1000*1000
+app.config["UPLOAD_FOLDER"] = "uploads"
+app.config["ALLOWED_EXTENSIONS"] = {"pdf", "doc", "docx"}
+app.config["MAX_CONTENT_PATH"] = 5 * 1000 * 1000
 
 # Ensure the upload folder exists
 # os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -42,26 +51,31 @@ print("Table created successfully")
 conn.commit()
 conn.close()
 
+
 def get_db_connection():
     conn = sqlite3.connect("./database.db")
     conn.row_factory = sqlite3.Row
     return conn
-@app.route("/", methods = ('GET', 'POST'))
+
+
+@app.route("/", methods=("GET", "POST"))
 def index():
     if "current_user" in session:
-        if request.method == 'POST':
-            job_title = request.form.get('job_title')
-            location = request.form.get('location')
-            company_name = request.form.get('company_name')
+        if request.method == "POST":
+            job_title = request.form.get("job_title")
+            location = request.form.get("location")
+            company_name = request.form.get("company_name")
 
-            search_filter = {'job_title': job_title , 'location': location, 'company_name': company_name }
+            search_filter = {
+                "job_title": job_title,
+                "location": location,
+                "company_name": company_name,
+            }
             print(search_filter)
-            return redirect(url_for('jobs',search_filter=json.dumps(search_filter)))
+            return redirect(url_for("jobs", search_filter=json.dumps(search_filter)))
         return render_template("index.html")
     print("email not in session")
     return redirect(url_for("login"))
-
-
 
 
 @app.route("/about")
@@ -81,71 +95,119 @@ def premium():
     return redirect(url_for("login"))
 
 
-@app.route("/profile", methods=['GET', 'POST'])
+@app.route("/profile", methods=["GET", "POST"])
 def profile():
     if "current_user" not in session:
         print("email not in session")
         return redirect(url_for("login"))
-    
+
     email = session["current_user"][1]
     conn = get_db_connection()
-    cursor= conn.cursor()
+    cursor = conn.cursor()
     cursor.execute("SELECT * FROM User WHERE email=?", (email,))
     user = cursor.fetchone()
 
     try:
-        if request.method == 'POST':
-            name = request.form.get('user_name')
-            phone = request.form.get('phone')
-            pincode = request.form.get('pincode')
-            location = request.form.get('location')
-            dob = request.form.get('birthday')
-            qualification = request.form.get('degree')
-            subject = request.form.get('subject')
-            role = request.form.get('joblinkup-usage')
-            about = request.form.get('aboutuser')
+        if request.method == "POST":
+            name = request.form.get("user_name")
+            phone = request.form.get("phone")
+            pincode = request.form.get("pincode")
+            location = request.form.get("location")
+            dob = request.form.get("birthday")
+            qualification = request.form.get("degree")
+            subject = request.form.get("subject")
+            role = request.form.get("joblinkup-usage")
+            about = request.form.get("aboutuser")
 
-            cursor.execute("""
+            cursor.execute(
+                """
                 UPDATE User SET name = ?, phone_no=?, pin=?, addr=?, DoB=?, Qualification=?, 
                 Subject=?, role=?, about = ? WHERE email=?
-                """, (
-                    name, phone, pincode, location, dob, qualification, subject, role, about, email          
-                ))
-            print ('updated')
-            
-            conn.commit()
-            
-            flash('Profile updated successfully!', 'success')
+                """,
+                (
+                    name,
+                    phone,
+                    pincode,
+                    location,
+                    dob,
+                    qualification,
+                    subject,
+                    role,
+                    about,
+                    email,
+                ),
+            )
+            print("updated")
 
-            if 'resume' in request.files:
-                print('entered if resume')
-                f = request.files['resume']
-                if f.filename != '' and allowed_file(f.filename):
-                    print('entered if')
-                    query = conn.execute('SELECT resume FROM User WHERE email = ?', (email,))
+            conn.commit()
+
+            flash("Profile updated successfully!", "success")
+
+            if "resume" in request.files:
+                print("entered if resume")
+                f = request.files["resume"]
+                if f.filename != "" and allowed_file(f.filename):
+                    print("entered if")
+                    query = conn.execute(
+                        "SELECT resume FROM User WHERE email = ?", (email,)
+                    )
                     data = query.fetchone()
-                    old_filename = data[0] 
+                    old_filename = data[0]
                     if old_filename != None:
-                        old_filepath = os.path.join(app.config['UPLOAD_FOLDER'], old_filename)
+                        old_filepath = os.path.join(
+                            app.config["UPLOAD_FOLDER"], old_filename
+                        )
                         if os.path.exists(old_filepath):
                             os.remove(old_filepath)
                     filename = secure_filename(f.filename)
-                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename))
+                    filepath = os.path.join(
+                        app.config["UPLOAD_FOLDER"], secure_filename(f.filename)
+                    )
                     print("filepath", filepath)
                     f.save(os.path.join("uploads", secure_filename(f.filename)))
-                    flash('Upload successful')
-                    cursor.execute('UPDATE User SET resume = ? WHERE email = ?', (secure_filename(f.filename), email))
-                    conn.commit() 
-                    print('updated')
+                    flash("Upload successful")
+                    cursor.execute(
+                        "UPDATE User SET resume = ? WHERE email = ?",
+                        (secure_filename(f.filename), email),
+                    )
+                    conn.commit()
+                    print("updated")
+                    cursor.execute("SELECT * FROM User WHERE email=?", (email,))
+                    user = cursor.fetchone()
+                    session["current_user"] = user
+
+            if "pfp" in request.files:
+                f = request.files["pfp"]
+                allowed_filetype = ["png", "jpg", "jpeg"]
+                ext = f.filename.split(".")[1]
+                if ext in allowed_filetype and f.filename != "":
+                    print("pfp passed checks")
+                    filename = secure_filename(f.filename)
+                    filepath = os.path.join("profilePictures/", email + "." + ext)
+                    print("filepath", filepath)
+                    f.save(os.path.join("profilePictures/", email + "." + ext))
+                    flash("Upload successful")
+                    cursor.execute(
+                        "UPDATE User SET pfp = ? WHERE email = ?",
+                        (filepath, email),
+                    )
+                    conn.commit()
+                    print("updated")
+                    cursor.execute("SELECT * FROM User WHERE email=?", (email,))
+                    user = cursor.fetchone()
+                    session["current_user"] = user
+
+                print(f)
+
             conn.close()
-            return redirect(url_for('profile'))
+
+            return redirect(url_for("profile"))
     except Exception as e:
         print(str(e))
-        flash('An error occurred while updating your profile.', 'error')
+        flash("An error occurred while updating your profile.", "error")
     finally:
         conn.close()
     return render_template("profile.html", user=user)
-
 
 
 @app.route("/login")
@@ -167,7 +229,7 @@ def loginuser():
                 flash("Please enter email and password")
                 print("Please enter email and password")
                 return redirect(url_for("login") + "#0")
-            
+
             print("login_email", login_email)
             print("login_password", login_password)
 
@@ -225,7 +287,7 @@ def adduser():
                 con.commit()
                 flash("Account created successfully")
                 print("Account created successfully")
-                return redirect(url_for('profile'))
+                return redirect(url_for("profile"))
         except:
             con.rollback()
             flash("Something went wrong, please try again")
@@ -278,8 +340,13 @@ def updateuser():
         finally:
             return redirect(url_for("index"))
 
+
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+    return (
+        "." in filename
+        and filename.rsplit(".", 1)[1].lower() in app.config["ALLOWED_EXTENSIONS"]
+    )
+
 
 # @app.route('/upload/<int:job_id>', methods=['GET', 'POST'])
 # def upload_file(job_id):
@@ -307,183 +374,304 @@ def allowed_file(filename):
 
 #     return render_template('upload.html', job_id=job_id)
 
+
 def populate_job_listings():
     conn = sqlite3.connect("./database.db")
     cur = conn.cursor()
 
-    companies = ["TCS", "IBM", "Infosys", "Wipro", "Accenture", "Dell", "ABB", "Microsoft", "Google", "Amazon"]
-    job_titles = ["Software Engineer", "Data Analyst", "Web Developer", "Database Administrator", "Network Engineer",
-                  "UX Designer", "Digital Marketing Specialist", "Business Analyst", "AI/ML Engineer", "DevOps Engineer"]
+    companies = [
+        "TCS",
+        "IBM",
+        "Infosys",
+        "Wipro",
+        "Accenture",
+        "Dell",
+        "ABB",
+        "Microsoft",
+        "Google",
+        "Amazon",
+    ]
+    job_titles = [
+        "Software Engineer",
+        "Data Analyst",
+        "Web Developer",
+        "Database Administrator",
+        "Network Engineer",
+        "UX Designer",
+        "Digital Marketing Specialist",
+        "Business Analyst",
+        "AI/ML Engineer",
+        "DevOps Engineer",
+    ]
     locations = ["Bangalore", "Pune", "Chennai", "Hyderabad", "Mumbai"]
 
     job_data = {
         "Software Engineer": {
             "qualification": "Bachelor's degree in Computer Science or related field",
             "description": "Join our team as a Software Engineer and work on cutting-edge software projects.",
-            "responsibilities": "Develop and maintain software applications."
+            "responsibilities": "Develop and maintain software applications.",
         },
         "Data Analyst": {
             "qualification": "Bachelor's degree in Statistics, Data Science, or related field",
             "description": "Become a Data Analyst and analyze data to provide valuable insights.",
-            "responsibilities": "Collect, clean, and analyze data to support business decisions."
+            "responsibilities": "Collect, clean, and analyze data to support business decisions.",
         },
         "Web Developer": {
             "qualification": "Bachelor's degree in Web Development or related field",
             "description": "Join us as a Web Developer and create stunning websites and web applications.",
-            "responsibilities": "Design and develop web solutions for clients."
+            "responsibilities": "Design and develop web solutions for clients.",
         },
         "Database Administrator": {
             "qualification": "Bachelor's degree in Database Management or related field",
             "description": "Work as a Database Administrator and manage databases for optimal performance.",
-            "responsibilities": "Ensure data security and efficient database operations."
+            "responsibilities": "Ensure data security and efficient database operations.",
         },
         "Network Engineer": {
             "qualification": "Bachelor's degree in Network Engineering or related field",
             "description": "Join our team as a Network Engineer and build and maintain network infrastructure.",
-            "responsibilities": "Design and implement network solutions to meet business needs."
+            "responsibilities": "Design and implement network solutions to meet business needs.",
         },
         "UX Designer": {
             "qualification": "Bachelor's degree in UX/UI Design or related field",
             "description": "Become a UX Designer and create user-centered designs for web and mobile applications.",
-            "responsibilities": "Design intuitive and visually appealing user interfaces."
+            "responsibilities": "Design intuitive and visually appealing user interfaces.",
         },
         "Digital Marketing Specialist": {
             "qualification": "Bachelor's degree in Marketing or related field",
             "description": "Join as a Digital Marketing Specialist and drive online marketing campaigns.",
-            "responsibilities": "Plan and execute digital marketing strategies."
+            "responsibilities": "Plan and execute digital marketing strategies.",
         },
         "Business Analyst": {
             "qualification": "Bachelor's degree in Business Administration or related field",
             "description": "Work as a Business Analyst and analyze business processes.",
-            "responsibilities": "Gather and document business requirements."
+            "responsibilities": "Gather and document business requirements.",
         },
         "AI/ML Engineer": {
             "qualification": "Bachelor's degree in Computer Science or AI/ML",
             "description": "Join as an AI/ML Engineer and develop machine learning models.",
-            "responsibilities": "Design and train AI/ML algorithms."
+            "responsibilities": "Design and train AI/ML algorithms.",
         },
         "DevOps Engineer": {
             "qualification": "Bachelor's degree in Computer Science or related field",
             "description": "Join as a DevOps Engineer and automate software development processes.",
-            "responsibilities": "Build and maintain CI/CD pipelines."
-        }
+            "responsibilities": "Build and maintain CI/CD pipelines.",
+        },
     }
-    
+
     for company in companies:
         for _ in range(5):  # Insert 5 job listings per company (adjust as needed)
             title = random.choice(job_titles)
             salary = random.randint(50000, 150000)
             location = random.choice(locations)
             duration = random.choice(["Full-time", "Part-time", "Contract"])
-            company_description = job_data.get(title, {}).get("description", "Description not available")
-            company_responsibilities = job_data.get(title, {}).get("responsibilities", "Responsibilities not available")
-            qualification = job_data.get(title, {}).get("qualification", "Qualification not available")
+            company_description = job_data.get(title, {}).get(
+                "description", "Description not available"
+            )
+            company_responsibilities = job_data.get(title, {}).get(
+                "responsibilities", "Responsibilities not available"
+            )
+            qualification = job_data.get(title, {}).get(
+                "qualification", "Qualification not available"
+            )
 
             # Replace this with your actual data insertion logic into your database table
-            insert_sql = '''
+            insert_sql = """
             INSERT INTO Jobs (Company_name, Title, Salary, Location, Duration, Description, Responsibilities, Qualification)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            '''
+            """
 
-            job_data_tuple = (company, title, salary, location, duration, company_description, company_responsibilities, qualification)
+            job_data_tuple = (
+                company,
+                title,
+                salary,
+                location,
+                duration,
+                company_description,
+                company_responsibilities,
+                qualification,
+            )
 
             cur.execute(insert_sql, job_data_tuple)
 
     conn.commit()
     conn.close()
 
+
 # Call the function to populate job listings
 populate_job_listings()
 
-@app.route('/jobs', methods = ['GET'])
+
+@app.route("/jobs", methods=["GET"])
 def jobs():
-    search_filter = request.args.get('search_filter', default=json.dumps({}), type=str)
+    search_filter = request.args.get("search_filter", default=json.dumps({}), type=str)
     search_filter = json.loads(search_filter)
-    print(search_filter,'are the search filters')
+    print(search_filter, "are the search filters")
     conn = sqlite3.connect("./database.db")
     cursor = conn.cursor()
-    
+
     # Execute a query to fetch job listings from the database
-    if (search_filter == {}) or  ((search_filter['job_title'] == 'All') and (search_filter['company_name']== '') and (search_filter['location']=='All Locations')):
-        cursor.execute('SELECT * FROM Jobs')
+    if (search_filter == {}) or (
+        (search_filter["job_title"] == "All")
+        and (search_filter["company_name"] == "")
+        and (search_filter["location"] == "All Locations")
+    ):
+        cursor.execute("SELECT * FROM Jobs")
 
-    elif (search_filter['job_title'] == 'All') and (search_filter['company_name']!= '') and (search_filter['location']!='All Locations'):
-        cursor.execute('SELECT * FROM Jobs where Company_name like ? and Location = ? ',('%'+search_filter['company_name']+'%',search_filter['location']))
-         
-    elif (search_filter['job_title'] != 'All') and (search_filter['company_name']== '') and (search_filter['location']!='All Locations'):
-        cursor.execute('SELECT * FROM Jobs where Title = ? and Location = ? ',(search_filter['job_title'],search_filter['location']))
+    elif (
+        (search_filter["job_title"] == "All")
+        and (search_filter["company_name"] != "")
+        and (search_filter["location"] != "All Locations")
+    ):
+        cursor.execute(
+            "SELECT * FROM Jobs where Company_name like ? and Location = ? ",
+            ("%" + search_filter["company_name"] + "%", search_filter["location"]),
+        )
 
-    elif (search_filter['job_title'] != 'All') and (search_filter['company_name']!= '') and (search_filter['location']=='All Locations'):
-        cursor.execute('SELECT * FROM Jobs where Company_name like ? and Title = ? ',('%'+search_filter['company_name']+'%',search_filter['job_title']))    
+    elif (
+        (search_filter["job_title"] != "All")
+        and (search_filter["company_name"] == "")
+        and (search_filter["location"] != "All Locations")
+    ):
+        cursor.execute(
+            "SELECT * FROM Jobs where Title = ? and Location = ? ",
+            (search_filter["job_title"], search_filter["location"]),
+        )
 
-    elif (search_filter['job_title'] != 'All') and (search_filter['company_name']!= '') and (search_filter['location']!='All Locations'):
-        cursor.execute('SELECT * FROM Jobs where Company_name like ? and Title = ? and Location = ?',('%'+search_filter['company_name']+'%',search_filter['job_title'], search_filter['location']))
-    
-    elif (search_filter['job_title'] != 'All') and (search_filter['company_name']== '') and (search_filter['location']=='All Locations'):
-        cursor.execute('SELECT * FROM Jobs where Title = ? ',(search_filter['job_title'],))
-    elif (search_filter['job_title'] == 'All') and (search_filter['company_name']!= '') and (search_filter['location']=='All Locations'):
-        cursor.execute("SELECT * FROM Jobs where Company_name like ?",('%'+search_filter['company_name']+'%',))
-    elif (search_filter['job_title'] == 'All') and (search_filter['company_name']== '') and (search_filter['location']!='All Locations'):
-        cursor.execute('SELECT * FROM Jobs where Location = ? ',(search_filter['location'],))    
+    elif (
+        (search_filter["job_title"] != "All")
+        and (search_filter["company_name"] != "")
+        and (search_filter["location"] == "All Locations")
+    ):
+        cursor.execute(
+            "SELECT * FROM Jobs where Company_name like ? and Title = ? ",
+            ("%" + search_filter["company_name"] + "%", search_filter["job_title"]),
+        )
+
+    elif (
+        (search_filter["job_title"] != "All")
+        and (search_filter["company_name"] != "")
+        and (search_filter["location"] != "All Locations")
+    ):
+        cursor.execute(
+            "SELECT * FROM Jobs where Company_name like ? and Title = ? and Location = ?",
+            (
+                "%" + search_filter["company_name"] + "%",
+                search_filter["job_title"],
+                search_filter["location"],
+            ),
+        )
+
+    elif (
+        (search_filter["job_title"] != "All")
+        and (search_filter["company_name"] == "")
+        and (search_filter["location"] == "All Locations")
+    ):
+        cursor.execute(
+            "SELECT * FROM Jobs where Title = ? ", (search_filter["job_title"],)
+        )
+    elif (
+        (search_filter["job_title"] == "All")
+        and (search_filter["company_name"] != "")
+        and (search_filter["location"] == "All Locations")
+    ):
+        cursor.execute(
+            "SELECT * FROM Jobs where Company_name like ?",
+            ("%" + search_filter["company_name"] + "%",),
+        )
+    elif (
+        (search_filter["job_title"] == "All")
+        and (search_filter["company_name"] == "")
+        and (search_filter["location"] != "All Locations")
+    ):
+        cursor.execute(
+            "SELECT * FROM Jobs where Location = ? ", (search_filter["location"],)
+        )
 
     # Fetch all job listings as a list of dictionaries
     job_listings = []
     for row in cursor.fetchall():
-        job_id, company_name, title, salary, location, duration, description, responsibilities, qualification = row
+        (
+            job_id,
+            company_name,
+            title,
+            salary,
+            location,
+            duration,
+            description,
+            responsibilities,
+            qualification,
+        ) = row
         job = {
-            'ID': job_id,
-            'company': company_name,
-            'title': title,
-            'salary': salary,
-            'location': location,
-            'duration': duration,
-            'description': description,
-            'responsibilities': responsibilities,
-            'qualification': qualification
+            "ID": job_id,
+            "company": company_name,
+            "title": title,
+            "salary": salary,
+            "location": location,
+            "duration": duration,
+            "description": description,
+            "responsibilities": responsibilities,
+            "qualification": qualification,
         }
         job_listings.append(job)
 
     no_results = False
     if not job_listings:
         no_results = True
-        cursor.execute('SELECT * FROM Jobs')
+        cursor.execute("SELECT * FROM Jobs")
         for row in cursor.fetchall():
-            job_id, company_name, title, salary, location, duration, description, responsibilities, qualification = row
+            (
+                job_id,
+                company_name,
+                title,
+                salary,
+                location,
+                duration,
+                description,
+                responsibilities,
+                qualification,
+            ) = row
             job = {
-                'ID': job_id,
-                'company': company_name,
-                'title': title,
-                'salary': salary,
-                'location': location,
-                'duration': duration,
-                'description': description,
-                'responsibilities': responsibilities,
-                'qualification': qualification
+                "ID": job_id,
+                "company": company_name,
+                "title": title,
+                "salary": salary,
+                "location": location,
+                "duration": duration,
+                "description": description,
+                "responsibilities": responsibilities,
+                "qualification": qualification,
             }
             job_listings.append(job)
     conn.commit()
     conn.close()
 
-    return render_template('job.html', job_listings=job_listings, no_results=no_results)
+    return render_template("job.html", job_listings=job_listings, no_results=no_results)
+
 
 # Rest of your routes and code...
 # ... (Previous code)
 
-@app.route('/job_details/<int:job_id>')
+
+@app.route("/job_details/<int:job_id>")
 def job_details(job_id):
-    conn = sqlite3.connect('./database.db')
+    conn = sqlite3.connect("./database.db")
     cursor = conn.cursor()
     job_id = int(job_id)
 
-    cursor.execute('SELECT * FROM Jobs WHERE ID = ?', (job_id,))
+    cursor.execute("SELECT * FROM Jobs WHERE ID = ?", (job_id,))
     job = cursor.fetchone()
     conn.commit()
     conn.close()
 
-    return render_template('job_details.html', job=job)
+    return render_template("job_details.html", job=job)
+
 
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+    return (
+        "." in filename
+        and filename.rsplit(".", 1)[1].lower() in app.config["ALLOWED_EXTENSIONS"]
+    )
+
 
 # @app.route('/upload/<int:job_id>', methods=['GET', 'POST'])
 # def upload_file(job_id):
@@ -508,32 +696,35 @@ def allowed_file(filename):
 #         else:
 #             flash('Invalid file format. Allowed formats: pdf, doc, docx.')
 
+
 #     return render_template('upload.html', job_id=job_id)
 @app.route("/features")
 def features():
     return render_template("features.html")
 
+
 @app.route("/upload")
 def upload():
     return render_template("upload.html")
 
-@app.route('/uploader', methods = ['GET', 'POST'])
+
+@app.route("/uploader", methods=["GET", "POST"])
 def upload_file():
-   if request.method == 'POST':
-        if 'resume' not in request.files:
-            flash('File not found')
-            return redirect(url_for('profile'))
-        f = request.files.get('resume')
-        if f is None or f.filename == '' or not allowed_file(f.filename):
-            flash('Invalid file')
+    if request.method == "POST":
+        if "resume" not in request.files:
+            flash("File not found")
+            return redirect(url_for("profile"))
+        f = request.files.get("resume")
+        if f is None or f.filename == "" or not allowed_file(f.filename):
+            flash("Invalid file")
             return redirect(request.url)
-        if f.filename!= '':
+        if f.filename != "":
             email = session["current_user"][1]
             print(email)
             # Fetch the old filename from the database
-            query = conn.execute('SELECT resume FROM users WHERE email = ?', (email,))
+            query = conn.execute("SELECT resume FROM users WHERE email = ?", (email,))
             data = query.fetchone()
-            old_filename = data[0] 
+            old_filename = data[0]
             # Delete the old file in the folder
             # if old_filename == None:
             #     filename = secure_filename(f.filename)
@@ -542,50 +733,65 @@ def upload_file():
             #     flash('Upload successful')
             #     conn.execute('UPDATE users SET resume = ? WHERE email = ?', (secure_filename(f.filename),email))
             if old_filename != None:
-                old_filepath = os.path.join(app.config['UPLOAD_FOLDER'], old_filename)
+                old_filepath = os.path.join(app.config["UPLOAD_FOLDER"], old_filename)
                 if os.path.exists(old_filepath):
                     os.remove(old_filepath)
             # Save the new file
             filename = secure_filename(f.filename)
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename))
-            f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
-            flash('Upload successful')
+            filepath = os.path.join(
+                app.config["UPLOAD_FOLDER"], secure_filename(f.filename)
+            )
+            f.save(
+                os.path.join(app.config["UPLOAD_FOLDER"], secure_filename(f.filename))
+            )
+            flash("Upload successful")
             # Update the new filename in the database
-            conn.execute('UPDATE users SET resume = ? WHERE email = ?', (secure_filename(f.filename), email)) 
-            print('updated')
+            conn.execute(
+                "UPDATE users SET resume = ? WHERE email = ?",
+                (secure_filename(f.filename), email),
+            )
+            print("updated")
             # else:
             #     conn.execute('UPDATE users SET resume = ? WHERE email = ?', (secure_filename(f.filename),email))
             conn.commit()
-            return redirect(url_for('profile'))
+            return redirect(url_for("profile"))
         conn.close()
+
 
 @app.route("/subscribe")
 def subscribe():
     return render_template("subscribe.html")
 
+
 @app.route("/payment")
 def payment():
     return render_template("payment.html")
+
 
 @app.route("/interviewhelper")
 def interviewhelper():
     return render_template("interviewhelper.html")
 
+
 @app.route("/business_analyst")
 def business_analyst():
     return render_template("business_analyst.html")
+
 
 @app.route("/data_scientist")
 def data_scientist():
     return render_template("data_scientist.html")
 
+
 @app.route("/softwareEngineer")
 def softwareEngineer():
     return render_template("softwareEngineer.html")
 
+
 @app.route("/project_manager")
 def project_manager():
     return render_template("project_manager.html")
+
 
 @app.route("/data_engineer")
 def data_engineer():
@@ -596,23 +802,28 @@ def data_engineer():
 def uiux():
     return render_template("uiux.html")
 
+
 @app.route("/data_analyst")
 def data_analyst():
     return render_template("data_analyst.html")
+
 
 @app.route("/DevOps")
 def DevOps():
     return render_template("DevOps.html")
 
+
 @app.route("/DMM")
 def DMM():
     return render_template("DMM.html")
+
 
 @app.route("/AIML")
 def AIML():
     return render_template("AIML.html")
 
-@app.route('/resume')
+
+@app.route("/resume")
 def resume_templates():
     # Define a list of templates with their URLs
     # templates = [
@@ -621,13 +832,14 @@ def resume_templates():
     #     {'name': 'Sydney-Resume-Template-Modern', 'url': 'static/pdf/Sydney-Resume-Template-Modern (1).pdf'},
     #     # Add more templates as needed
     # ]
-    
-    return render_template('resume.html')
+
+    return render_template("resume.html")
+
+
 @app.route("/subscribers")
 def subscribers():
     return render_template("subscribers.html")
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0' , port=80,debug=True)
-
+    app.run(host="0.0.0.0", port=5000, debug=True)
