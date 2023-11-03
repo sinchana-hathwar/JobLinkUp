@@ -419,6 +419,21 @@ body {
   }
 }
 
+.error {
+  border-color: red;
+}
+.error-message {
+  display: none;
+  color: red;
+  margin-top: 5px;
+}
+.email-error-message,
+.password-error-message {
+  display: none;
+  color: red;
+  margin-top: 5px;
+}
+
 .accept-terms {
 	color: #F64747;
 	text-decoration: none;

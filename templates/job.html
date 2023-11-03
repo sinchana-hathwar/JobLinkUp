@@ -6,6 +6,12 @@
         <div class="heading_container heading_center">
             <h2>Featured Jobs</h2>
         </div>
+        {% if no_results %}
+        <div style="text-align: center; border: 1px solid black; padding: 20px; margin: 20px;">
+            <h3 style="font-weight: bold;">No matching results found</h3>
+            <i class="fas fa-search-minus" style="color:azure;"></i>
+        </div>
+        {% endif %}
         <div class="row">
             {% for job in job_listings %}
             <div class="col-md-6"> <!-- Each column takes up half the width of the container -->

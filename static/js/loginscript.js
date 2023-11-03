@@ -91,6 +91,61 @@ jQuery(document).ready(function($){
     $form_forgot_password.addClass('is-selected');
   }
 
+  function displayError($input, message) {
+    console.log('Displaying error:', message);
+    var $error_message = $input.siblings('.error-message');
+    $error_message.text(message).show();
+    $input.addClass('error');
+    // $error_message.show();
+  }
+
+  // Function to handle form submission
+$form_login.on('submit', function(event) {
+  event.preventDefault();
+
+  // Perform user validation and submit the form if valid
+  var valid = validateLoginForm();
+  if (valid) {
+    $form_login.off('submit').submit();
+  }
+});
+
+// Function to validate the login form
+function validateLoginForm() {
+  var $email_input = $form_login.find('input[type="email"]');
+  var $password_input = $form_login.find('input[type="password"]');
+  var $form_error_message = $form_login.find('.error-message');
+
+  // Reset error messages
+  $form_login.find('.error-message').hide();
+  $form_error_message.empty();
+  $email_input.removeClass('error');
+  $password_input.removeClass('error');
+  // Perform user validation
+  var valid = true;
+  if (($email_input.val() === '') && ($password_input.val() === '')) {
+    displayError($email_input, "Please enter your email");
+    displayError($password_input, "Please enter your password");
+    valid = false;
+  }
+
+  if ($email_input.val() === '') {
+    displayError($email_input, "Please enter your email");
+    valid = false;
+  }
+
+  if ($password_input.val() === '') {
+    displayError($password_input, "Please enter your password");
+    valid = false;
+  }
+
+  if (!valid) {
+    $form_error_message.text("Invalid Credentials").show();
+  }
+
+  return valid;
+}
+
   //REMOVE THIS - it's just to show error messages 
   // $form_login.find('input[type="submit"]').on('click', function(event){
   //   event.preventDefault();
