@@ -24,18 +24,18 @@
 			</ul>
 
 			<div id="login">
-				<form class="form" action = "{{url_for('loginuser')}}" method="POST">
+				<form id= "login-form" class="form" action = "{{url_for('loginuser')}}" method="POST">
 					<p class="fieldset">
 						<label class="image-replace email" for="login_email" >E-mail</label>
 						<input class="full-width has-padding has-border" name="login_email" type="email" placeholder="E-mail">
-						<span class="error-message">An account with this email address does not exist!</span>
+						<span class="error-message email-error-message">An account with this email address does not exist!</span>
 					</p>
 
 					<p class="fieldset">
 						<label class="image-replace password" for="login_password" name='login_password'>Password</label>
 						<input class="full-width has-padding has-border" id="signin-password" name="login_password" type="password"  placeholder="Password">
 						<a href="#0" class="hide-password">Show</a>
-						<span class="error-message">Wrong password! Try again.</span>
+						<span class="error-message password-error-message">Wrong password! Try again.</span>
 					</p>
 
 					<p class="fieldset">
@@ -49,8 +49,20 @@
 				</form>
 				
 				<p class="form-bottom-message"><a href="#0">Forgot your password?</a></p>
+				<span class="error-message"></span>
 				<!-- <a href="#0" class="close-form">Close</a> -->
 			</div>
+
+			{% with messages = get_flashed_messages() %}
+				{% if messages %}
+					<ul class=flashes>
+					{% for message in messages %}
+					<li>{{ message }}</li>
+					{% endfor %}
+					</ul>
+				{% endif %}
+			{% endwith %}
+
 
 			<div id="signup">
 				<form class="form" action = "{{ url_for('adduser') }}" method = "POST">

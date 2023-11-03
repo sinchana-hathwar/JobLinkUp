@@ -2,6 +2,8 @@
 <div class="container-xl px-4 mt-4">
   <hr class="mt-0 mb-4" />
   <div class="row">
+    <form method="POST" enctype="multipart/form-data" action="{{url_for('profile')}}" style="display: flex;">
+
     <div class="col-xl-4">
       <div class="card mb-4 mb-xl-0">
         <div class="card-header">
@@ -30,9 +32,10 @@
           <i class="fas fa-edit"></i>
         </div>
         
-          <textarea style="padding: 8px 16px" cols = '40' rows = '8' id="aboutuser">
-            Lorem epsun amsdinaudn kbsdjn ib askdibn licubi slbclknbhbj
+          <textarea type="text" style="padding: 8px 16px; " rows="8" id="aboutuser" name="aboutuser" >  {{user[9]}}
           </textarea>
+          
+
 
         
       </div>
@@ -41,7 +44,8 @@
       <div class="card mb-4">
         <div class="card-header">Account Details</div>
         <div class="card-body">
-          <form>
+          <div>
+          <!-- <form method="POST" action="{{url_for('profile')}}"> -->
             <div class="mb-3">
               <label class="small mb-1" for="inputUsername"
                 >Username (how your name will appear to other users on the
@@ -52,6 +56,7 @@
                 id="inputUsername"
                 type="text"
                 name="user_name"
+                value = "{{ user[0] }}"
                 placeholder="Enter your username"
               />
             </div>
@@ -65,6 +70,7 @@
                   name="phone"
                   type="text"
                   placeholder="Enter your phone number"
+                  value = "{{ user[3] }}"
                 />
               </div>
 
@@ -72,7 +78,7 @@
                 <label for="joblinkup-usage" class="small mb-1"
                   >How do you want to use JobLinkup?</label
                 >
-                <select id="joblinkup-usage" name="joblinkup-usage">
+                <select id="joblinkup-usage" name="joblinkup-usage" value="{{user[11]}}">
                   <option value="seek-opportunities">Seek opportunities</option>
                   <option value="hire-talent">Hire talent</option>
                 </select>
@@ -81,13 +87,15 @@
 
             <div class="row gx-3 mb-3">
               <div class="col-md-6">
-                <label class="small mb-1" for="pincode" name="pincode"
+                <label class="small mb-1" for="pincode" name="pincode" 
                   >Pincode</label
                 >
                 <input
                   class="form-control"
                   id="pinCode"
                   type="text"
+                  name="pincode"
+                  value = "{{ user[6] }}"
                   placeholder="Enter your Pincode"
                 />
               </div>
@@ -100,6 +108,8 @@
                   class="form-control"
                   id="inputLocation"
                   type="text"
+                  name = location
+                  value = "{{ user[5] }}"
                   placeholder="Enter your City and Country"
                 />
               </div>
@@ -110,13 +120,13 @@
                 <label class="small mb-1" for="degree"
                   >What is your highest qualification?</label
                 >
-                <select name="degree">
-                  <option value="High School">High School</option>
-                  <option value="Diploma Degree">Diploma Degree</option>
-                  <option value="Bachelor's Degree">Bachelor's Degree</option>
-                  <option value="Master's Degree">Master's Degree</option>
-                  <option value="Doctoral Degree">Doctoral Degree</option>
-                  <option value="Professional Degree">
+                <select name="degree" >
+                  <option value="High School" {% if user[7] == 'High School' %} selected {% endif %}>High School</option>
+                  <option value="Diploma Degree" {% if user[7] == 'Diploma Degree' %} selected {% endif %}>Diploma Degree</option>
+                  <option value="Bachelor's Degree" {% if user[7] == "Bachelor's Degree" %} selected {% endif %}>Bachelor's Degree</option>
+                  <option value="Master's Degree" {% if user[7] == "Master's Degree" %} selected {% endif %}>Master's Degree</option>
+                  <option value="Doctoral Degree" {% if user[7] == 'Doctoral Degree' %} selected {% endif %}>Doctoral Degree</option>
+                  <option value="Professional Degree" {% if user[7] == 'Professional Degree' %} selected {% endif %}>Professional Degree</option>
                     Professional Degree
                   </option>
                 </select>
@@ -124,114 +134,114 @@
 
               <div class="col-md-6">
                 <label class="small mb-1" for="subject">Subject of study</label>
-                <select name="subject">
-                  <option value="Accounting and Finance">
+                <select name="subject" >
+                  <option value="Accounting and Finance" {% if user[8] == 'Accounting and Finance' %} selected {% endif %}>
                     Accounting and Finance
                   </option>
-                  <option value="Aerospace Engineering">
+                  <option value="Aerospace Engineering" {% if user[8] == 'Aerospace Engineering' %} selected {% endif %}>
                     Aerospace Engineering
                   </option>
-                  <option value="Agriculture">Agriculture</option>
-                  <option value="American Studies">American Studies</option>
-                  <option value="Animal Science and Management">
+                  <option value="Agriculture" {% if user[8] == 'Agriculture' %} selected {% endif %}>Agriculture</option>
+                  <option value="American Studies" {% if user[8] == 'American Studies' %} selected {% endif %}>American Studies</option>
+                  <option value="Animal Science and Management" {% if user[8] == 'Animal Science and Management' %} selected {% endif %}>
                     Animal Science and Management
                   </option>
-                  <option value="Animation">Animation</option>
-                  <option value="Anthropology">Anthropology</option>
-                  <option value="Archaeology">Archaeology</option>
-                  <option value="Architecture">Architecture</option>
-                  <option value="Biochemistry">Biochemistry</option>
-                  <option value="Biology">Biology</option>
-                  <option value="Biomedical Sciences">
+                  <option value="Animation" {% if user[8] == 'Animation' %} selected {% endif %}>Animation</option>
+                  <option value="Anthropology" {% if user[8] == 'Anthropology' %} selected {% endif %}>Anthropology</option>
+                  <option value="Archaeology" {% if user[8] == 'Archaeology' %} selected {% endif %}>Archaeology</option>
+                  <option value="Architecture" {% if user[8] == 'Architecture' %} selected {% endif %}>Architecture</option>
+                  <option value="Biochemistry" {% if user[8] == 'Biochemistry' %} selected {% endif %}>Biochemistry</option>
+                  <option value="Biology" {% if user[8] == 'Biology' %} selected {% endif %}>Biology</option>
+                  <option value="Biomedical Sciences" {% if user[8] == 'Biomedical Sciences' %} selected {% endif %}>
                     Biomedical Sciences
                   </option>
-                  <option value="Business Management">
+                  <option value="Business Management" {% if user[8] == 'Business Management' %} selected {% endif %}>
                     Business Management
                   </option>
-                  <option value="Chemical Engineering">
+                  <option value="Chemical Engineering" {% if user[8] == 'Chemical Engineering' %} selected {% endif %}>
                     Chemical Engineering
                   </option>
-                  <option value="Chemistry">Chemistry</option>
-                  <option value="Civil Engineering">Civil Engineering</option>
-                  <option value="Classics">Classics</option>
-                  <option value="Computer Science">Computer Science</option>
-                  <option value="Creative Writing">Creative Writing</option>
-                  <option value="Criminology">Criminology</option>
-                  <option value="Dance">Dance</option>
-                  <option value="Data science">Dentistry</option>
-                  <option value="Drama">Drama</option>
-                  <option value="Early Childhood Studies">
+                  <option value="Chemistry" {% if user[8] == 'Chemistry' %} selected {% endif %}>Chemistry</option>
+                  <option value="Civil Engineering" {% if user[8] == 'Civil Engineering' %} selected {% endif %}>Civil Engineering</option>
+                  <option value="Classics" {% if user[8] == 'Classics' %} selected {% endif %}>Classics</option>
+                  <option value="Computer Science" {% if user[8] == 'Computer Science' %} selected {% endif %}>Computer Science</option>
+                  <option value="Creative Writing" {% if user[8] == 'Creative Writing' %} selected {% endif %}>Creative Writing</option>
+                  <option value="Criminology" {% if user[8] == 'Criminology' %} selected {% endif %}>Criminology</option>
+                  <option value="Dance" {% if user[8] == 'Dance' %} selected {% endif %}>Dance</option>
+                  <option value="Data science" {% if user[8] == 'Data science' %} selected {% endif %}>Dentistry</option>
+                  <option value="Drama" {% if user[8] == 'Drama' %} selected {% endif %}>Drama</option>
+                  <option value="Early Childhood Studies" {% if user[8] == 'Early Childhood Studies' %} selected {% endif %}>
                     Early Childhood Studies
                   </option>
-                  <option value="Economics">Economics</option>
-                  <option value="Education">Education</option>
-                  <option value="Electrical and Electronic Engineering">
+                  <option value="Economics" {% if user[8] == 'Economics' %} selected {% endif %}>Economics</option>
+                  <option value="Education" {% if user[8] == 'Education' %} selected {% endif %}>Education</option>
+                  <option value="Electrical and Electronic Engineering" {% if user[8] == 'Electrical and Electronic Engineering' %} selected {% endif %}>
                     Electrical and Electronic Engineering
                   </option>
-                  <option value="English">English</option>
-                  <option value="Environmental Science">
+                  <option value="English" {% if user[8] == 'English' %} selected {% endif %}>English</option>
+                  <option value="Environmental Science" {% if user[8] == 'Environmental Science' %} selected {% endif %}>
                     Environmental Science
                   </option>
-                  <option value="Events Management">Events Management</option>
-                  <option value="Fashion">Fashion</option>
-                  <option value="Film Production">Film Production</option>
-                  <option value="Film Studies">Film Studies</option>
-                  <option value="Fine Art">Fine Art</option>
-                  <option value="Food Science">Food Science</option>
-                  <option value="Forensic Science">Forensic Science</option>
-                  <option value="Games Design">Games Design</option>
-                  <option value="Genetics">Genetics</option>
-                  <option value="Geography">Geography</option>
-                  <option value="Geology">Geology</option>
-                  <option value="Graphic Design">Graphic Design</option>
-                  <option value="Health and Social Care">
+                  <option value="Events Management" {% if user[8] == 'Events Management' %} selected {% endif %}>Events Management</option>
+                  <option value="Fashion" {% if user[8] == 'Fashion' %} selected {% endif %}>Fashion</option>
+                  <option value="Film Production" {% if user[8] == 'Film Production' %} selected {% endif %}>Film Production</option>
+                  <option value="Film Studies" {% if user[8] == 'Film Studies' %} selected {% endif %}>Film Studies</option>
+                  <option value="Fine Art" {% if user[8] == 'Fine Art' %} selected {% endif %}>Fine Art</option>
+                  <option value="Food Science" {% if user[8] == 'Food Science' %} selected {% endif %}>Food Science</option>
+                  <option value="Forensic Science" {% if user[8] == 'Forensic Science' %} selected {% endif %}>Forensic Science</option>
+                  <option value="Games Design" {% if user[8] == 'Games Design' %} selected {% endif %}>Games Design</option>
+                  <option value="Genetics" {% if user[8] == 'Genetics' %} selected {% endif %}>Genetics</option>
+                  <option value="Geography" {% if user[8] == 'Geography' %} selected {% endif %}>Geography</option>
+                  <option value="Geology" {% if user[8] == 'Geology' %} selected {% endif %}>Geology</option>
+                  <option value="Graphic Design" {% if user[8] == 'Graphic Design' %} selected {% endif %}>Graphic Design</option>
+                  <option value="Health and Social Care" {% if user[8] == 'Health and Social Care' %} selected {% endif %}>
                     Health and Social Care
                   </option>
-                  <option value="Health Studies">Health Studies</option>
-                  <option value="History">History</option>
-                  <option value="History of Art">History of Art</option>
-                  <option value="Hospitality Management">
+                  <option value="Health Studies" {% if user[8] == 'Health Studies' %} selected {% endif %}>Health Studies</option>
+                  <option value="History" {% if user[8] == 'History' %} selected {% endif %}>History</option>
+                  <option value="History of Art" {% if user[8] == 'History of Art' %} selected {% endif %}>History of Art</option>
+                  <option value="Hospitality Management" {% if user[8] == 'Hospitality Management' %} selected {% endif %}>
                     Hospitality Management
                   </option>
-                  <option value="Human Resource Management">
+                  <option value="Human Resource Management" {% if user[8] == 'Human Resource Management' %} selected {% endif %}>
                     Human Resource Management
                   </option>
-                  <option value="Illustration">Illustration</option>
-                  <option value="Information Systems">
+                  <option value="Illustration" {% if user[8] == 'Illustration' %} selected {% endif %}>Illustration</option>
+                  <option value="Information Systems" {% if user[8] == 'Information Systems' %} selected {% endif %}>
                     Information Systems
                   </option>
-                  <option value="Interior Design">Interior Design</option>
-                  <option value="International Business">
+                  <option value="Interior Design" {% if user[8] == 'Interior Design' %} selected {% endif %}>Interior Design</option>
+                  <option value="International Business" {% if user[8] == 'International Business' %} selected {% endif %}>
                     International Business
                   </option>
-                  <option value="International Relations">
+                  <option value="International Relations" {% if user[8] == 'International Relations' %} selected {% endif %}>
                     International Relations
                   </option>
-                  <option value="Journalism">Journalism</option>
-                  <option value="Law">Law</option>
-                  <option value="Linguistics">Linguistics</option>
-                  <option value="Management">Management</option>
-                  <option value="Marketing">Marketing</option>
-                  <option value="Mathematics">Mathematics</option>
-                  <option value="Mechanical Engineering">
+                  <option value="Journalism" {% if user[8] == 'Journalism' %} selected {% endif %}>Journalism</option>
+                  <option value="Law" {% if user[8] == 'Law' %} selected {% endif %}>Law</option>
+                  <option value="Linguistics" {% if user[8] == 'Linguistics' %} selected {% endif %}>Linguistics</option>
+                  <option value="Management" {% if user[8] == 'Management' %} selected {% endif %}>Management</option>
+                  <option value="Marketing" {% if user[8] == 'Marketing' %} selected {% endif %}>Marketing</option>
+                  <option value="Mathematics" {% if user[8] == 'Mathematics' %} selected {% endif %}>Mathematics</option>
+                  <option value="Mechanical Engineering" {% if user[8] == 'Mechanical Engineering' %} selected {% endif %}>
                     Mechanical Engineering
                   </option>
-                  <option value="Media Studies">Media Studies</option>
-                  <option value="Medical Science">Medical Science</option>
-                  <option value="Music">Music</option>
-                  <option value="Nursing">Nursing</option>
-                  <option value="Nutrition">Nutrition</option>
-                  <option value="Occupational Therapy">
+                  <option value="Media Studies" {% if user[8] == 'Media Studies' %} selected {% endif %}>Media Studies</option>
+                  <option value="Medical Science" {% if user[8] == 'Medical Science' %} selected {% endif %}>Medical Science</option>
+                  <option value="Music" {% if user[8] == 'Music' %} selected {% endif %}>Music</option>
+                  <option value="Nursing" {% if user[8] == 'Nursing' %} selected {% endif %}>Nursing</option>
+                  <option value="Nutrition" {% if user[8] == 'Nutrition' %} selected {% endif %}>Nutrition</option>
+                  <option value="Occupational Therapy" {% if user[8] == 'Occupational Therapy' %} selected {% endif %}>
                     Occupational Therapy
                   </option>
-                  <option value="Optometry">Optometry</option>
-                  <option value="Pharmacy">Pharmacy</option>
-                  <option value="Philosophy">Philosophy</option>
-                  <option value="Photography">Photography</option>
-                  <option value="Physical Therapy">Physical Therapy</option>
-                  <option value="Physics">Physics</option>
-                  <option value="Political Science">Political Science</option>
-                  <option value="Psychology">Psychology</option>
+                  <option value="Optometry" {% if user[8] == 'Optometry' %} selected {% endif %}>Optometry</option>
+                  <option value="Pharmacy" {% if user[8] == 'Pharmacy' %} selected {% endif %}>Pharmacy</option>
+                  <option value="Philosophy" {% if user[8] == 'Philosophy' %} selected {% endif %}>Philosophy</option>
+                  <option value="Photography" {% if user[8] == 'Photography' %} selected {% endif %}>Photography</option>
+                  <option value="Physical Therapy" {% if user[8] == 'Physical Therapy' %} selected {% endif %}>Physical Therapy</option>
+                  <option value="Physics" {% if user[8] == 'Physics' %} selected {% endif %}>Physics</option>
+                  <option value="Political Science" {% if user[8] == 'Political Science' %} selected {% endif %}>Political Science</option>
+                  <option value="Psychology" {% if user[8] == 'Psychology' %} selected {% endif %}>Psychology</option>
                 </select>
               </div>
             </div>
@@ -253,7 +263,8 @@
             <div class="row gx-3 mb-3">
               <div class="col-md-6">
                 <div style="padding: 30px 4px">
-                  <label
+
+                  <!-- <label
                     for="resume-upload"
                     style="
                       background-color: #3498db;
@@ -268,7 +279,7 @@
                     >Upload your resume</label
                   >
                   <input type="file" id="resume-upload" style="display: none" />
-                  <p id="file-name"></p>
+                  <p id="file-name"></p> -->
                 </div>
               </div>
 
@@ -279,16 +290,34 @@
                   id="inputBirthday"
                   type="date"
                   name="birthday"
+                  value = "{{ user[4] }}"
                   placeholder="Enter your birthday"
                 />
               </div>
             </div>
 
-            <button class="btn btn-primary" type="button">Save changes</button>
-          </form>
+          </div>
+
+          <h5 style="color: rgb(6, 6, 6);">Upload Your Resume</h5>
+                    <!-- <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload_file')}}"> -->
+                        <div class="form-group">
+                            <p style ="color: black; font-size: x-small; font-style: italic;"> Max size is 5MB. Allowed formats are .pdf, .doc, .docx</p>
+                            <input type="file" name="resume" id="resume" accept=".pdf, .doc, .docx" style="color: black;" onchange="document.getElementById('fileLabel').innerHTML = this.files[0].name;">
+                        </div>
+                        <div class="form-group">
+                          <label id="fileLabel">No file chosen</label>
+                      </div>
+                        <div class="form-group">
+                          {% if user.resume %}
+                            <p>Uploaded file: {{ user.resume }}</p>
+                          {% endif %}
+                        </div>
+                        <button class="btn btn-primary" type="submit">Save changes</button>
+                    <!-- </form> -->
         </div>
       </div>
     </div>
+    </form>
   </div>
 </div>
 {% endblock %}

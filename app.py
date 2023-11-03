@@ -4,14 +4,16 @@ import random
 from flask import Flask, render_template, request, redirect, url_for, flash, session, abort
 from werkzeug.utils import secure_filename
 import json
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'pdf', 'doc', 'docx'}
+app.config['MAX_CONTENT_PATH'] = 5*1000*1000
 
 # Ensure the upload folder exists
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+# os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 conn = sqlite3.connect("./database.db")
 print("Opened database successfully")
@@ -26,7 +28,7 @@ tables = cursor.fetchall()
 for table in tables:
     print(table[0])
 conn.execute(
-    "CREATE TABLE if not exists User (name TEXT,email TEXT, password TEXT, phone_no INT, DoB date, addr TEXT,  pin TEXT, Qualification TEXT, Subject Text, About TEXT, IsSubscribed BOOLEAN DEFAULT 0, role TEXT DEFAULT 'job_seeker' )"
+    "CREATE TABLE if not exists User (name TEXT,email TEXT, password TEXT, phone_no INT, DoB date, addr TEXT,  pin TEXT, Qualification TEXT, Subject Text, About TEXT, IsSubscribed BOOLEAN DEFAULT 0, role TEXT DEFAULT 'job_seeker', resume TEXT )"
 )
 
 conn.execute(
@@ -79,12 +81,71 @@ def premium():
     return redirect(url_for("login"))
 
 
-@app.route("/profile")
+@app.route("/profile", methods=['GET', 'POST'])
 def profile():
-    if "current_user" in session:
-        return render_template("profile.html")
-    print("email not in session")
-    return redirect(url_for("login"))
+    if "current_user" not in session:
+        print("email not in session")
+        return redirect(url_for("login"))
+    
+    email = session["current_user"][1]
+    conn = get_db_connection()
+    cursor= conn.cursor()
+    cursor.execute("SELECT * FROM User WHERE email=?", (email,))
+    user = cursor.fetchone()
+
+    try:
+        if request.method == 'POST':
+            name = request.form.get('user_name')
+            phone = request.form.get('phone')
+            pincode = request.form.get('pincode')
+            location = request.form.get('location')
+            dob = request.form.get('birthday')
+            qualification = request.form.get('degree')
+            subject = request.form.get('subject')
+            role = request.form.get('joblinkup-usage')
+            about = request.form.get('aboutuser')
+
+            cursor.execute("""
+                UPDATE User SET name = ?, phone_no=?, pin=?, addr=?, DoB=?, Qualification=?, 
+                Subject=?, role=?, about = ? WHERE email=?
+                """, (
+                    name, phone, pincode, location, dob, qualification, subject, role, about, email          
+                ))
+            print ('updated')
+            
+            conn.commit()
+            
+            flash('Profile updated successfully!', 'success')
+
+            if 'resume' in request.files:
+                print('entered if resume')
+                f = request.files['resume']
+                if f.filename != '' and allowed_file(f.filename):
+                    print('entered if')
+                    query = conn.execute('SELECT resume FROM User WHERE email = ?', (email,))
+                    data = query.fetchone()
+                    old_filename = data[0] 
+                    if old_filename != None:
+                        old_filepath = os.path.join(app.config['UPLOAD_FOLDER'], old_filename)
+                        if os.path.exists(old_filepath):
+                            os.remove(old_filepath)
+                    filename = secure_filename(f.filename)
+                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename))
+                    print("filepath", filepath)
+                    f.save(os.path.join("uploads", secure_filename(f.filename)))
+                    flash('Upload successful')
+                    cursor.execute('UPDATE User SET resume = ? WHERE email = ?', (secure_filename(f.filename), email))
+                    conn.commit() 
+                    print('updated')
+            conn.close()
+            return redirect(url_for('profile'))
+    except Exception as e:
+        print(str(e))
+        flash('An error occurred while updating your profile.', 'error')
+    finally:
+        conn.close()
+    return render_template("profile.html", user=user)
+
 
 
 @app.route("/login")
@@ -97,10 +158,19 @@ def loginuser():
     if request.method == "POST":
         try:
             print("entered try")
-            login_email = request.form["login_email"]
+            login_email = request.form.get("login_email")
+            login_password = request.form.get("login_password")
             print("login_email", login_email)
-            login_password = request.form["login_password"]
             print("login_password", login_password)
+
+            if not login_email or not login_password:
+                flash("Please enter email and password")
+                print("Please enter email and password")
+                return redirect(url_for("login") + "#0")
+            
+            print("login_email", login_email)
+            print("login_password", login_password)
+
             with sqlite3.connect("database.db") as con:
                 cur = con.cursor()
                 user = cur.execute(
@@ -108,11 +178,11 @@ def loginuser():
                 ).fetchall()
 
                 if len(user) == 0:
-                    flash("Invalid Email")
+                    # flash("Invalid Email")
                     print("Invalid Email")
                     return redirect(url_for("login"))
                 elif user[0][2] != login_password:
-                    flash("Invalid Password")
+                    # flash("Invalid Password")
                     print("Invalid Password")
                     return redirect(url_for("login"))
 
@@ -124,7 +194,7 @@ def loginuser():
 
         except:
             print("login failed")
-            flash("Something went wrong, please try again")
+            # flash("Something went wrong, please try again")
             return redirect(url_for("login"))
 
         return redirect(url_for("index"))
@@ -155,7 +225,7 @@ def adduser():
                 con.commit()
                 flash("Account created successfully")
                 print("Account created successfully")
-
+                return redirect(url_for('profile'))
         except:
             con.rollback()
             flash("Something went wrong, please try again")
@@ -339,7 +409,7 @@ def jobs():
 
     elif (search_filter['job_title'] == 'All') and (search_filter['company_name']!= '') and (search_filter['location']!='All Locations'):
         cursor.execute('SELECT * FROM Jobs where Company_name like ? and Location = ? ',('%'+search_filter['company_name']+'%',search_filter['location']))
-        
+         
     elif (search_filter['job_title'] != 'All') and (search_filter['company_name']== '') and (search_filter['location']!='All Locations'):
         cursor.execute('SELECT * FROM Jobs where Title = ? and Location = ? ',(search_filter['job_title'],search_filter['location']))
 
@@ -372,10 +442,29 @@ def jobs():
             'qualification': qualification
         }
         job_listings.append(job)
+
+    no_results = False
+    if not job_listings:
+        no_results = True
+        cursor.execute('SELECT * FROM Jobs')
+        for row in cursor.fetchall():
+            job_id, company_name, title, salary, location, duration, description, responsibilities, qualification = row
+            job = {
+                'ID': job_id,
+                'company': company_name,
+                'title': title,
+                'salary': salary,
+                'location': location,
+                'duration': duration,
+                'description': description,
+                'responsibilities': responsibilities,
+                'qualification': qualification
+            }
+            job_listings.append(job)
     conn.commit()
     conn.close()
 
-    return render_template('job.html', job_listings=job_listings)
+    return render_template('job.html', job_listings=job_listings, no_results=no_results)
 
 # Rest of your routes and code...
 # ... (Previous code)
@@ -427,6 +516,48 @@ def features():
 @app.route("/upload")
 def upload():
     return render_template("upload.html")
+
+@app.route('/uploader', methods = ['GET', 'POST'])
+def upload_file():
+   if request.method == 'POST':
+        if 'resume' not in request.files:
+            flash('File not found')
+            return redirect(url_for('profile'))
+        f = request.files.get('resume')
+        if f is None or f.filename == '' or not allowed_file(f.filename):
+            flash('Invalid file')
+            return redirect(request.url)
+        if f.filename!= '':
+            email = session["current_user"][1]
+            print(email)
+            # Fetch the old filename from the database
+            query = conn.execute('SELECT resume FROM users WHERE email = ?', (email,))
+            data = query.fetchone()
+            old_filename = data[0] 
+            # Delete the old file in the folder
+            # if old_filename == None:
+            #     filename = secure_filename(f.filename)
+            #     filepath = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename))
+            #     f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
+            #     flash('Upload successful')
+            #     conn.execute('UPDATE users SET resume = ? WHERE email = ?', (secure_filename(f.filename),email))
+            if old_filename != None:
+                old_filepath = os.path.join(app.config['UPLOAD_FOLDER'], old_filename)
+                if os.path.exists(old_filepath):
+                    os.remove(old_filepath)
+            # Save the new file
+            filename = secure_filename(f.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename))
+            f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
+            flash('Upload successful')
+            # Update the new filename in the database
+            conn.execute('UPDATE users SET resume = ? WHERE email = ?', (secure_filename(f.filename), email)) 
+            print('updated')
+            # else:
+            #     conn.execute('UPDATE users SET resume = ? WHERE email = ?', (secure_filename(f.filename),email))
+            conn.commit()
+            return redirect(url_for('profile'))
+        conn.close()
 
 @app.route("/subscribe")
 def subscribe():
