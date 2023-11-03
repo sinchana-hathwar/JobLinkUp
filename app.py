@@ -37,7 +37,7 @@ tables = cursor.fetchall()
 for table in tables:
     print(table[0])
 conn.execute(
-    "CREATE TABLE if not exists User (name TEXT,email TEXT, password TEXT, phone_no INT, DoB date, addr TEXT,  pin TEXT, Qualification TEXT, Subject Text, About TEXT, IsSubscribed BOOLEAN DEFAULT 0, role TEXT DEFAULT 'job_seeker', resume TEXT )"
+    "CREATE TABLE if not exists User (name TEXT,email TEXT, password TEXT, phone_no INT, DoB date, addr TEXT,  pin TEXT, Qualification TEXT, Subject Text, About TEXT, IsSubscribed BOOLEAN DEFAULT 0, role TEXT DEFAULT 'job_seeker', resume TEXT, pfp TEXT )"
 )
 
 conn.execute(
@@ -174,7 +174,7 @@ def profile():
                     print("updated")
                     cursor.execute("SELECT * FROM User WHERE email=?", (email,))
                     user = cursor.fetchone()
-                    session["current_user"] = user
+                    #session["current_user"] = user
 
             if "pfp" in request.files:
                 f = request.files["pfp"]
@@ -185,7 +185,7 @@ def profile():
                     filename = secure_filename(f.filename)
                     filepath = os.path.join("profilePictures/", email + "." + ext)
                     print("filepath", filepath)
-                    f.save(os.path.join("profilePictures/", email + "." + ext))
+                    f.save(os.path.join("static/profilePictures/", email + "." + ext))
                     flash("Upload successful")
                     cursor.execute(
                         "UPDATE User SET pfp = ? WHERE email = ?",
@@ -195,7 +195,7 @@ def profile():
                     print("updated")
                     cursor.execute("SELECT * FROM User WHERE email=?", (email,))
                     user = cursor.fetchone()
-                    session["current_user"] = user
+                    # session["current_user"] = user
 
                 print(f)
 
