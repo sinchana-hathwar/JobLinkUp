@@ -46,6 +46,10 @@ conn.execute(
 conn.execute(
     "CREATE TABLE if not exists Templates (Template_name TEXT,Template_link TEXT)"
 )
+conn.execute(
+    "CREATE TABLE if not exists JobsApplied (email Text NOT NULL, JobID TEXT NOT NULL)"
+    #add make them foreign keys if required later
+)
 
 print("Table created successfully")
 conn.commit()
@@ -178,32 +182,34 @@ def profile():
 
             if "pfp" in request.files:
                 f = request.files["pfp"]
-                allowed_filetype = ["png", "jpg", "jpeg"]
-                ext = f.filename.split(".")[1]
-                if ext in allowed_filetype and f.filename != "":
-                    print("pfp passed checks")
-                    filename = secure_filename(f.filename)
-                    filepath = os.path.join("profilePictures/", email + "." + ext)
-                    print("filepath", filepath)
-                    f.save(os.path.join("static/profilePictures/", email + "." + ext))
-                    flash("Upload successful")
-                    cursor.execute(
-                        "UPDATE User SET pfp = ? WHERE email = ?",
-                        (filepath, email),
-                    )
-                    conn.commit()
-                    print("updated")
-                    cursor.execute("SELECT * FROM User WHERE email=?", (email,))
-                    user = cursor.fetchone()
-                    # session["current_user"] = user
+                
+                if f.filename != "":
+                    
+                    allowed_filetype = ["png", "jpg", "jpeg"]
+                    if f.filename.split('.')[1] in allowed_filetype:
+                        
+                        ext = f.filename.split(".")[1]
+                        print("pfp passed checks")
+                        filename = secure_filename(f.filename)
+                        filepath = os.path.join("profilePictures/", email + "." + ext)
+                        print("filepath", filepath)
+                        f.save(os.path.join("static/profilePictures/", email + "." + ext))
+                        flash("Upload successful")
+                        cursor.execute(
+                            "UPDATE User SET pfp = ? WHERE email = ?",
+                            (filepath, email),
+                        )
+                        conn.commit()
+                        print("updated")
+                        cursor.execute("SELECT * FROM User WHERE email=?", (email,))
+                        user = cursor.fetchone()
+                        # session["current_user"] = user
 
                 print(f)
 
-            conn.close()
-
             return redirect(url_for("profile"))
     except Exception as e:
-        print(str(e))
+        print("proof",str(e))
         flash("An error occurred while updating your profile.", "error")
     finally:
         conn.close()
@@ -658,12 +664,47 @@ def job_details(job_id):
     cursor = conn.cursor()
     job_id = int(job_id)
 
-    cursor.execute("SELECT * FROM Jobs WHERE ID = ?", (job_id,))
-    job = cursor.fetchone()
+    job = cursor.execute("SELECT * FROM Jobs WHERE ID = ?", (job_id,)).fetchone()
+    print("binding passed are", session["current_user"][1])
+
+    applied_jobs = cursor.execute("SELECT * FROM JobsApplied WHERE email = ?", (session["current_user"][1],)).fetchall()
+    applied_jobs = applied_jobs[0][1].split(",")
+    print("applied jobs are ", applied_jobs)
+    if str(job_id) in applied_jobs:
+        applied = True
+    else:
+        applied = False
+    # job = cursor.fetchone()
     conn.commit()
     conn.close()
+    rendered_job = {"job":job,"applied":applied}
+    print("job details: ", rendered_job)
+    return render_template("job_details.html", rendered_job = rendered_job)
 
-    return render_template("job_details.html", job=job)
+@app.route("/add_job", methods=["GET", "POST"])
+def add_job():
+    
+    if request.method == "POST":
+        conn = sqlite3.connect("./database.db")
+        cur = conn.cursor()
+        jobId = request.form["job_id"]
+        print("applied job id: ", jobId, session["current_user"][1])
+        applied_jobs = cur.execute(
+            "SELECT * FROM JobsApplied WHERE email = ?", (session["current_user"][1],)
+        ).fetchall()
+        if not applied_jobs:
+            cur.execute("INSERT INTO JobsApplied values (?,?)", (session["current_user"][1], jobId))
+        else:
+            current_jobs = str(applied_jobs[0][1])
+            current_jobs_arr = current_jobs.split(",")
+            if jobId in current_jobs_arr:
+                return redirect(url_for("jobs"))
+            cur.execute("UPDATE JobsApplied SET JobID = ? WHERE email = ?", (current_jobs + "," + str(jobId), session["current_user"][1]))
+        conn.commit()           
+
+        conn.close()
+        return redirect(url_for("jobs"))
+   
 
 
 def allowed_file(filename):
