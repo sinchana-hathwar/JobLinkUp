@@ -413,54 +413,168 @@ def populate_job_listings():
 
     job_data = {
         "Software Engineer": {
-            "qualification": "Bachelor's degree in Computer Science or related field",
-            "description": "Join our team as a Software Engineer and work on cutting-edge software projects.",
-            "responsibilities": "Develop and maintain software applications.",
+            "qualification": 
+            """Bachelor's degree in Computer Science or related field
+            Proficiency in programming languages (e.g., Java, Python, C++) and software development methodologies.
+            Problem-solving skills and strong analytical thinking.""",
+            "description":
+            """Software engineers design, develop, test, and maintain software applications and systems. They collaborate with cross-functional teams to create high-quality software solutions
+            Join our team as a Software Engineer and work on cutting-edge software projects.""",
+            "responsibilities":
+            """Develop and maintain software applications.
+            Writing and debugging code.
+            Collaborating with other engineers and product managers.
+            Maintaining code quality and documentation.
+            Solving technical challenges and implementing software enhancements.""",
         },
         "Data Analyst": {
-            "qualification": "Bachelor's degree in Statistics, Data Science, or related field",
-            "description": "Become a Data Analyst and analyze data to provide valuable insights.",
-            "responsibilities": "Collect, clean, and analyze data to support business decisions.",
+            "qualification":
+            """Bachelor's degree in Statistics, Data Science, or related field
+            Proficiency in data analysis and data visualization tools (e.g., Excel, SQL, Tableau, Power BI).
+            Strong analytical and problem-solving skills""",
+            "description": 
+            """Data analysts are responsible for collecting, processing, and analyzing data to support data-driven decision-making within an organization. 
+            They help extract insights from data to drive business growth and efficiency.
+            Become a Data Analyst and analyze data to provide valuable insights.""",
+            "responsibilities":
+            """Collect, clean, and analyze data to support business decisions.
+            Create data visualizations, reports, and dashboards to present findings to non-technical stakeholders.
+            Work with cross-functional teams to understand business needs and provide actionable data insights.
+            Effectively communicate findings and recommendations to both technical and non-technical audiences.""",
         },
         "Web Developer": {
-            "qualification": "Bachelor's degree in Web Development or related field",
-            "description": "Join us as a Web Developer and create stunning websites and web applications.",
-            "responsibilities": "Design and develop web solutions for clients.",
+            "qualification": 
+            """Bachelor's degree in Web Development or related field
+            Proficiency in web development languages and technologies, including HTML, CSS, JavaScript, and frameworks like React or Angular.
+            Strong problem-solving and critical-thinking skills.""",
+            "description": 
+            """Web developers are responsible for designing, building, and maintaining websites and web applications.
+             They work on the front-end (user interface) and/or back-end (server-side) aspects of websites.
+             Join us as a Web Developer and create stunning websites and web applications.""",
+            "responsibilities": """Design and develop web solutions for clients.
+            Creating user-friendly and visually appealing website interfaces.
+            Implementing responsive web design to ensure compatibility across various devices and screen sizes.
+            Collaborating with UI/UX designers to turn design mockups into functional web pages.
+            Conducting testing and quality assurance to identify and resolve issues.
+             Debugging and troubleshooting web application errors.
+             Staying up-to-date with the latest web development trends, technologies, and best practices.""",
         },
         "Database Administrator": {
-            "qualification": "Bachelor's degree in Database Management or related field",
-            "description": "Work as a Database Administrator and manage databases for optimal performance.",
-            "responsibilities": "Ensure data security and efficient database operations.",
+            "qualification": 
+            """Strong knowledge of database management systems (e.g., Oracle, SQL Server, MySQL, PostgreSQL).
+             Proficiency in SQL (Structured Query Language).
+            Problem-solving and analytical skills.
+            Bachelor's degree in Database Management or related field""",
+            "description": 
+            """Database administrators are responsible for managing and maintaining databases to ensure data integrity, availability, and security. 
+            They work with database management systems (DBMS) and collaborate with development and IT teams.
+            Work as a Database Administrator and manage databases for optimal performance.""",
+            "responsibilities": 
+            """Database Design and Implementation
+            Data Security and Access Control
+            Backup and Recovery
+            Performance Tuning and Monitoring
+            Data Migration and Integration
+            Ensure data security and efficient database operations.""",
         },
         "Network Engineer": {
-            "qualification": "Bachelor's degree in Network Engineering or related field",
-            "description": "Join our team as a Network Engineer and build and maintain network infrastructure.",
-            "responsibilities": "Design and implement network solutions to meet business needs.",
+            "qualification": 
+            """Bachelor's degree in Network Engineering or related field
+            Strong knowledge of networking technologies and protocols.
+            Certifications such as Cisco CCNA/CCNP, CompTIA Network+, or relevant industry-specific certifications.
+            Problem-solving skills and analytical thinking.""",
+            "description":
+             """Network engineers design, implement, maintain, and manage an organization's network infrastructure.
+             They ensure that network systems are secure, reliable, and efficient, enabling data communication and connectivity.
+            Join our team as a Network Engineer and build and maintain network infrastructure.""",
+            "responsibilities": 
+            """Network Design and Planning
+            Network Implementation
+            Network Upgrades and Expansion
+            Network Monitoring and Alerts
+            Network Security
+            Design and implement network solutions to meet business needs.""",
         },
         "UX Designer": {
-            "qualification": "Bachelor's degree in UX/UI Design or related field",
-            "description": "Become a UX Designer and create user-centered designs for web and mobile applications.",
-            "responsibilities": "Design intuitive and visually appealing user interfaces.",
+            "qualification":
+            """Bachelor's degree in UX/UI Design or related field
+            Proficiency in design tools (e.g., Adobe XD, Sketch, Figma).
+            Strong understanding of user-centered design principles.""",
+            "description": 
+            """UI/UX designers create user-friendly and visually appealing interfaces for web and mobile applications.
+             They focus on user experience, interaction design, and usability.
+            Become a UX Designer and create user-centered designs for web and mobile applications.""",
+            "responsibilities":
+            """Conducting user research and testing.
+            Creating wireframes, prototypes, and mockups.
+            Collaborating with developers to implement designs.
+            Ensuring a seamless and intuitive user experience.
+            Design intuitive and visually appealing user interfaces.""",
         },
         "Digital Marketing Specialist": {
-            "qualification": "Bachelor's degree in Marketing or related field",
-            "description": "Join as a Digital Marketing Specialist and drive online marketing campaigns.",
-            "responsibilities": "Plan and execute digital marketing strategies.",
+            "qualification": 
+            """Bachelor's degree in Marketing or related field
+            Proficiency in digital marketing tools and platforms, including Google Ads, social media advertising, email marketing, and SEO (Search Engine Optimization).
+            Strong analytical and data-driven decision-making skills.""",
+            "description":
+            """Digital marketing specialists are responsible for planning and executing online marketing strategies to drive brand awareness, engagement, and lead generation.
+             They leverage various digital channels to reach target audiences and achieve marketing goals.
+            Join as a Digital Marketing Specialist and drive online marketing campaigns.""",
+            "responsibilities":
+            """Digital Marketing Strategy
+            Search Engine Optimization (SEO)
+            Online Advertising and Remarketing
+            Budget Management
+            Plan and execute digital marketing strategies.""",
         },
         "Business Analyst": {
-            "qualification": "Bachelor's degree in Business Administration or related field",
-            "description": "Work as a Business Analyst and analyze business processes.",
-            "responsibilities": "Gather and document business requirements.",
+            "qualification": 
+            """Bachelor's degree in Business Administration or related field
+            Strong analytical and problem-solving skills.
+            Business analysis certification (e.g., CBAP).""",
+            "description": 
+            """Business analysts bridge the gap between business needs and technology solutions.
+             They identify business requirements and propose system improvements.
+            Work as a Business Analyst and analyze business processes.""",
+            "responsibilities":
+            """Gathering and documenting business requirements.
+            Analyzing data and processes to identify opportunities for improvement.
+            Collaborating with stakeholders to define project scope and objectives.
+            Developing business cases and recommending solutions.
+            Gather and document business requirements.""",
         },
         "AI/ML Engineer": {
-            "qualification": "Bachelor's degree in Computer Science or AI/ML",
-            "description": "Join as an AI/ML Engineer and develop machine learning models.",
-            "responsibilities": "Design and train AI/ML algorithms.",
+            "qualification":
+             """Proficiency in programming languages (e.g., Python) and machine learning frameworks (e.g., TensorFlow, PyTorch).
+            Strong problem-solving and critical-thinking skills
+            Bachelor's degree in Computer Science or AI/ML""",
+            "description":
+            """AI/ML engineers design, develop, and deploy machine learning models and AI systems. 
+            They work with large datasets, develop algorithms, and create predictive models. 
+            Join as an AI/ML Engineer and develop machine learning models.""",
+            "responsibilities":
+            """ Developing and implementing machine learning models and algorithms.
+            Collaborating with data scientists and domain experts to understand industry-specific problems and solutions.
+            Building, testing, and deploying machine learning models in production environments.
+            Optimizing models for performance, scalability, and efficiency.
+            Staying up-to-date with the latest AI and ML technologies and best practices.
+            Design and train AI/ML algorithms.""",
         },
         "DevOps Engineer": {
-            "qualification": "Bachelor's degree in Computer Science or related field",
-            "description": "Join as a DevOps Engineer and automate software development processes.",
-            "responsibilities": "Build and maintain CI/CD pipelines.",
+            "qualification": 
+            """Bachelor's degree in Computer Science or related field
+            Proficiency in scripting and automation tools (e.g., Bash, Python).
+            Knowledge of DevOps practices, CI/CD (Continuous Integration/Continuous Deployment), and cloud platforms (e.g., AWS, Azure).""",
+            "description": 
+            """DevOps engineers focus on automating and streamlining software development and IT operations. 
+            They aim to shorten the software development lifecycle and improve the quality of code.
+            Join as a DevOps Engineer and automate software development processes.""",
+            "responsibilities": 
+            """Implementing and maintaining CI/CD pipelines.
+            Automating manual tasks and processes.
+           Ensuring system stability, scalability, and security.
+           Collaborating with development and operations teams.
+            Build and maintain CI/CD pipelines.""",
         },
     }
 
@@ -663,17 +777,17 @@ def job_details(job_id):
     conn = sqlite3.connect("./database.db")
     cursor = conn.cursor()
     job_id = int(job_id)
-
+    applied = False
     job = cursor.execute("SELECT * FROM Jobs WHERE ID = ?", (job_id,)).fetchone()
     print("binding passed are", session["current_user"][1])
 
     applied_jobs = cursor.execute("SELECT * FROM JobsApplied WHERE email = ?", (session["current_user"][1],)).fetchall()
-    applied_jobs = applied_jobs[0][1].split(",")
-    print("applied jobs are ", applied_jobs)
-    if str(job_id) in applied_jobs:
-        applied = True
-    else:
-        applied = False
+   
+    if(len(applied_jobs)>0):
+        applied_jobs = applied_jobs[0][1].split(",")
+        print("applied jobs are ", applied_jobs)
+        if str(job_id) in applied_jobs:
+            applied = True
     # job = cursor.fetchone()
     conn.commit()
     conn.close()
