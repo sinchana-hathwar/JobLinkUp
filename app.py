@@ -22,7 +22,7 @@ app.config["ALLOWED_EXTENSIONS"] = {"pdf", "doc", "docx"}
 app.config["MAX_CONTENT_PATH"] = 5 * 1000 * 1000
 
 # Ensure the upload folder exists
-# os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 conn = sqlite3.connect("./database.db")
 print("Opened database successfully")
@@ -152,15 +152,14 @@ def profile():
                 f = request.files["resume"]
                 if f.filename != "" and allowed_file(f.filename):
                     print("entered if")
-                    query = conn.execute(
-                        "SELECT resume FROM User WHERE email = ?", (email,)
-                    )
+                    query = cursor.execute("SELECT resume FROM User WHERE email = ?", (email,))
+                    print('Query executed')
                     data = query.fetchone()
+                    print(data)
                     old_filename = data[0]
+                    print(old_filename)
                     if old_filename != None:
-                        old_filepath = os.path.join(
-                            app.config["UPLOAD_FOLDER"], old_filename
-                        )
+                        old_filepath = os.path.join(app.config["UPLOAD_FOLDER"], old_filename)
                         if os.path.exists(old_filepath):
                             os.remove(old_filepath)
                     filename = secure_filename(f.filename)
