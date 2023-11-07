@@ -22,7 +22,7 @@ instance/
 *.pyc
 *.pyo
 __pycache__/
-*.db
+
 
 # Dependency directories
 lib/
